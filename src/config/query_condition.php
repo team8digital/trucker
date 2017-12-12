@@ -1,16 +1,17 @@
-<?php return array(
+<?php
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Collection Query Condition Driver
     |--------------------------------------------------------------------------
     |
     | This setting tells Trucker how to give directives to the remote API which
-    | govern how conditions on a collection fetch shoud be conveyed.
+    | govern how conditions on a collection fetch should be conveyed.
     |
     | Supported Options:
     |
-    | get_array - This option will send the collection query conditions as an 
+    | get_array - This option will send the collection query conditions as an
     |             array of GET parameters nested under the search.container_parameter
     |             parameter defined in the config.  The resulting GET parameters
     |             may look something like:
@@ -22,13 +23,12 @@
     |             search[1][operator]=LIKE
     |             search[1][value]=someString
     |             logical_operator=AND
-    | 
+    |
     |
     |
     */
-   
-    'driver' => 'get_array_params',
 
+    'driver' => 'get_array_params',
 
     /*
     |--------------------------------------------------------------------------
@@ -38,9 +38,8 @@
     | Config values that are specific to the 'get_array_params' driver
     |
     */
-   
-    'get_array_params' => [
 
+    'get_array_params' => [
         // The request parameter which will contain the array of search conditions
         'container_parameter' => 'search',
 
@@ -67,7 +66,5 @@
         // Name of the parameter value for specifying "OR" search rule
         // combination behavior
         'or_operator' => 'OR',
-
     ],
-
-);
+];

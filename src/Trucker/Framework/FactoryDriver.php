@@ -1,13 +1,5 @@
 <?php
 
-/**
- * This file is part of Trucker
- *
- * (c) Brian Webb <bwebb@indatus.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 namespace Trucker\Framework;
 
 use Illuminate\Container\Container;
@@ -15,17 +7,15 @@ use Trucker\Support\Str;
 
 abstract class FactoryDriver
 {
-
     /**
-     * The IoC Container
+     * The IoC Container.
      *
-     * @var Illuminate\Container\Container
+     * @var Container
      */
     protected $app;
 
-
     /**
-     * Build a new FactoryDriver
+     * Build a new FactoryDriver.
      *
      * @param Container $app
      */
@@ -34,13 +24,14 @@ abstract class FactoryDriver
         $this->app = $app;
     }
 
-
     /**
-     * Function to use other defined abstract methods to 
-     * use a standard naming-convention based method of 
-     * building classes by the factory
-     * 
+     * Function to use other defined abstract methods to
+     * use a standard naming-convention based method of
+     * building classes by the factory.
+     *
      * @return mixed - anything a subclass factory can build
+     *
+     * @throws \InvalidArgumentException
      */
     public function build()
     {
@@ -55,12 +46,12 @@ abstract class FactoryDriver
         //get the prefix, suffix and namespace for the driver class
         $prefix = $this->getDriverNamePrefix();
         $suffix = $this->getDriverNameSuffix();
-        $ns     = $this->getDriverNamespace();
+        $ns = $this->getDriverNamespace();
 
         //use naming convention to convert the driver name
         //into a fully quantified class name
         $klass = Str::studly($driver);
-        $fqcn  = "{$ns}\\{$prefix}{$klass}{$suffix}";
+        $fqcn = "{$ns}\\{$prefix}{$klass}{$suffix}";
 
         try {
             $refl = new \ReflectionClass($fqcn);
@@ -70,10 +61,10 @@ abstract class FactoryDriver
 
         //make sure the driver implements the interface properly
         $interface = $this->getDriverInterface();
-        if (! $refl->implementsInterface($interface)) {
+        if (!$refl->implementsInterface($interface)) {
             throw new \InvalidArgumentException("Unsupported interface [{$driver}] must implement [{$interface}]");
         }
-        
+
         $instance = $refl->newInstanceArgs($this->getDriverArgumentsArray());
 
         if (is_null($instance)) {
@@ -83,58 +74,54 @@ abstract class FactoryDriver
         return $instance;
     }
 
-
     /**
-     * Function to return a string representaion of the namespace 
-     * that all classes built by the factory should be contained within
-     * 
+     * Function to return a string representaion of the namespace
+     * that all classes built by the factory should be contained within.
+     *
      * @return string - namespace string
      */
     abstract public function getDriverNamespace();
 
-
     /**
      * Function to return the interface that the driver's produced
-     * by the factory must implement
-     * 
-     * @return Interface
+     * by the factory must implement.
+     *
+     * @return string Interface
      */
     abstract public function getDriverInterface();
-
 
     /**
      * Function to return a string that should be suffixed
      * to the studly-cased driver name of all the drivers
-     * that the factory can return 
-     * 
+     * that the factory can return.
+     *
      * @return string
      */
     abstract public function getDriverNameSuffix();
 
-
     /**
      * Function to return a string that should be prefixed
      * to the studly-cased driver name of all the drivers
-     * that the factory can return
-     * 
+     * that the factory can return.
+     *
      * @return string
      */
     abstract public function getDriverNamePrefix();
 
     /**
      * Function to return an array of arguments that should be
-     * passed to the constructor of a new driver instance
-     * 
+     * passed to the constructor of a new driver instance.
+     *
      * @return array
      */
     abstract public function getDriverArgumentsArray();
 
     /**
-     * Function to return the string representation of the driver 
+     * Function to return the string representation of the driver
      * itslef based on a value fetched from the config file.  This
      * function will itself access the config, and return the driver
-     * setting
-     * 
+     * setting.
+     *
      * @return string
      */
     abstract public function getDriverConfigValue();

@@ -1,12 +1,16 @@
 <?php
 
-use Trucker\Responses\Collection;
-use Trucker\Facades\ConditionFactory;
-use Trucker\Facades\ResultOrderFactory;
-use Trucker\Facades\Config;
-use Mockery as m;
+namespace Trucker\Tests\Finders;
 
-class CollectionFinderTest extends TruckerTests
+use Trucker\Facades\ConditionFactory;
+use Trucker\Facades\Config;
+use Trucker\Facades\ResultOrderFactory;
+use Trucker\Responses\Collection;
+use Trucker\Tests\Helpers\GuzzleTestingTrait;
+use Trucker\Tests\Stubs\User;
+use Trucker\Tests\TruckerTestCase;
+
+class CollectionFinderTest extends TruckerTestCase
 {
     use GuzzleTestingTrait;
 
@@ -25,22 +29,20 @@ class CollectionFinderTest extends TruckerTests
         $found = User::all();
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions('GET', $base_uri, $uri);
 
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue($found instanceof Collection);
-        $this->assertEquals(5, $found->size(), "expected count is wrong");
+        $this->assertInstanceOf(Collection::class, $found);
+        $this->assertEquals(5, $found->size(), 'expected count is wrong');
         $this->assertEquals(1234, $found->first()->id);
         $this->assertEquals('John Doe', $found->first()->name);
     }
-
-
 
     public function testFindAllWithGetParams()
     {
@@ -50,21 +52,20 @@ class CollectionFinderTest extends TruckerTests
         $found = User::all(null, null, $queryParams);
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions('GET', $base_uri, $uri, $queryParams);
 
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue($found instanceof Collection);
-        $this->assertEquals(5, $found->size(), "expected count is wrong");
+        $this->assertInstanceOf(Collection::class, $found);
+        $this->assertEquals(5, $found->size(), 'expected count is wrong');
         $this->assertEquals(1234, $found->first()->id);
         $this->assertEquals('John Doe', $found->first()->name);
     }
-
 
     public function testFindAllWithGetParamsQueryConditions()
     {
@@ -79,10 +80,10 @@ class CollectionFinderTest extends TruckerTests
         $this->assertEquals(
             http_build_query($conditions->toArray()),
             $conditions->toQueryString(),
-            "Expected query string to look different"
+            'Expected query string to look different'
         );
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $conditions->setLogicalOperator('invalid-operator');
 
         $conditions->setLogicalOperator($conditions->getLogicalOperatorAnd());
@@ -100,21 +101,20 @@ class CollectionFinderTest extends TruckerTests
         $found = User::all($conditions);
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions('GET', $base_uri, $uri, $conditions->toArray());
 
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue($found instanceof Collection);
-        $this->assertEquals(5, $found->size(), "expected count is wrong");
+        $this->assertInstanceOf(Collection::class, $found);
+        $this->assertEquals(5, $found->size(), 'expected count is wrong');
         $this->assertEquals(1234, $found->first()->id);
         $this->assertEquals('John Doe', $found->first()->name);
     }
-
 
     public function testFindAllWithGetParamsQueryConditionsAndGetOrderResults()
     {
@@ -130,7 +130,7 @@ class CollectionFinderTest extends TruckerTests
         $this->assertEquals(
             http_build_query($conditions->toArray()),
             $conditions->toQueryString(),
-            "Expected query string to look different"
+            'Expected query string to look different'
         );
 
         $order = ResultOrderFactory::build();
@@ -140,7 +140,7 @@ class CollectionFinderTest extends TruckerTests
         $this->assertEquals(
             http_build_query($order->toArray()),
             $order->toQueryString(),
-            "Expected query string to look different"
+            'Expected query string to look different'
         );
 
         $found = User::all($conditions, $order);
@@ -148,27 +148,26 @@ class CollectionFinderTest extends TruckerTests
         $getParams = array_merge($conditions->toArray(), $order->toArray());
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions('GET', $base_uri, $uri, $getParams);
 
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue($found instanceof Collection);
-        $this->assertEquals(5, $found->size(), "expected count is wrong");
+        $this->assertInstanceOf(Collection::class, $found);
+        $this->assertEquals(5, $found->size(), 'expected count is wrong');
         $this->assertEquals(1234, $found->first()->id);
         $this->assertEquals('John Doe', $found->first()->name);
     }
 
-
     public function testFindAllWithCollectionKeyOption()
     {
         $config = [
-            'trucker::request.base_uri'          => 'http://example.com',
-            'trucker::resource.collection_key'    => 'collection'
+            'trucker::request.base_uri' => 'http://example.com',
+            'trucker::resource.collection_key' => 'collection',
         ];
 
         $this->setupIndividualTest(
@@ -181,17 +180,17 @@ class CollectionFinderTest extends TruckerTests
         $found = User::all();
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions('GET', $base_uri, $uri);
 
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue($found instanceof Collection);
-        $this->assertEquals(5, $found->size(), "expected count is wrong");
+        $this->assertInstanceOf(Collection::class, $found);
+        $this->assertEquals(5, $found->size(), 'expected count is wrong');
         $this->assertEquals(1234, $found->first()->id);
         $this->assertEquals('John Doe', $found->first()->name);
         $this->assertArrayHasKey(
@@ -201,20 +200,20 @@ class CollectionFinderTest extends TruckerTests
         );
     }
 
-
-
     /**
-     * Helper function to get commonly used testing data
-     * 
+     * Helper function to get commonly used testing data.
+     *
+     * @param null $collectionKey
+     *
      * @return array
      */
     private function getTestOptions($collectionKey = null)
     {
         //some vars for our test
-        $data                  = [];
-        $data['uri']           = '/users';
-        $data['base_uri']      = 'http://example.com';
-        $data['queryParams']   = ['foo' => 'bar', 'biz' => 'bang'];
+        $data = [];
+        $data['uri'] = '/users';
+        $data['base_uri'] = 'http://example.com';
+        $data['queryParams'] = ['foo' => 'bar', 'biz' => 'bang'];
         $data['response_body'] = json_encode(
             $this->getRecords($collectionKey)
         );
@@ -222,64 +221,59 @@ class CollectionFinderTest extends TruckerTests
         return $data;
     }
 
-
     private function getRecords($collectionKey = null)
     {
         $records = [
             [
-                'id'    => 1234,
-                'name'  => 'John Doe',
-                'email' => 'jdoe@noboddy.com'
+                'id' => 1234,
+                'name' => 'John Doe',
+                'email' => 'jdoe@noboddy.com',
             ],
             [
-                'id'    => 1235,
-                'name'  => 'Sammy Smith',
-                'email' => 'sammys@mysite.com'
+                'id' => 1235,
+                'name' => 'Sammy Smith',
+                'email' => 'sammys@mysite.com',
             ],
             [
-                'id'    => 1236,
-                'name'  => 'Tommy Jingles',
-                'email' => 'tjingles@gmail.com'
+                'id' => 1236,
+                'name' => 'Tommy Jingles',
+                'email' => 'tjingles@gmail.com',
             ],
             [
-                'id'    => 1237,
-                'name'  => 'Brent Sanders',
-                'email' => 'bsanders@yahoo.com'
+                'id' => 1237,
+                'name' => 'Brent Sanders',
+                'email' => 'bsanders@yahoo.com',
             ],
             [
-                'id'    => 1238,
-                'name'  => 'Michael Blanton',
-                'email' => 'mblanton@outlook.com'
+                'id' => 1238,
+                'name' => 'Michael Blanton',
+                'email' => 'mblanton@outlook.com',
             ],
         ];
 
+        $result = $records;
         if ($collectionKey) {
             $result = [$collectionKey => $records];
-        } else {
-            $result = $records;
         }
 
         return $result;
     }
 
-
     /**
-     * Function to mock a request for us and 
-     * expect test data
-     * 
-     * @param  array $options 
-     * @param  array $config_overrides
-     * @param  int   $status 
-     * @param  string $content_type
-     * @return void
+     * Function to mock a request for us and
+     * expect test data.
+     *
+     * @param array  $options
+     * @param array  $config_overrides
+     * @param int    $status
+     * @param string $content_type
      */
     private function setupIndividualTest(
-        $options = [],
-        $config_overrides = [],
+        array $options = [],
+        array $config_overrides = [],
         $status = 200,
         $content_type = 'application/json'
     ) {
-
         extract($options);
 
         $config_overrides = empty($config_overrides) ? ['trucker::request.base_uri' => $base_uri] : $config_overrides;
@@ -298,8 +292,8 @@ class CollectionFinderTest extends TruckerTests
             //HTTP response headers
             //
             [
-                'Location'     => $base_uri.'/'.$uri,
-                'Content-Type' => $content_type
+                'Location' => $base_uri . '/' . $uri,
+                'Content-Type' => $content_type,
             ],
             //
             //response to return

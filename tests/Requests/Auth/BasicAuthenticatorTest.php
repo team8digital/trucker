@@ -1,27 +1,33 @@
 <?php
 
-use Mockery as m;
+namespace Trucker\Tests\Requests\Auth;
 
-use Trucker\Requests\Auth\BasicAuthenticator;
+use Guzzle\Http\Message\Request;
+use Prophecy\Argument;
 use Trucker\Facades\Config;
+use Trucker\Requests\Auth\BasicAuthenticator;
+use Trucker\Tests\TruckerTestCase;
 
-class BasicAuthenticatorTest extends TruckerTests
+class BasicAuthenticatorTest extends TruckerTestCase
 {
     public function testSetsAuthOnRequest()
     {
         $this->swapConfig([
-            'trucker::auth.driver'         => 'basic',
+            'trucker::auth.driver' => 'basic',
             'trucker::auth.basic.username' => 'myUsername',
-            'trucker::auth.basic.password' => 'myPassword'
+            'trucker::auth.basic.password' => 'myPassword',
         ]);
         Config::setApp($this->app);
 
-        $request = m::mock('Guzzle\Http\Message\Request');
-        $request->shouldReceive('setAuth')
-            ->with('myUsername', 'myPassword')
-            ->once();
+        $request = $this->prophesize(Request::class);
+        $request
+            ->setAuth(
+                Argument::exact('myUsername'),
+                Argument::exact('myPassword')
+            )
+            ->shouldBeCalled();
 
         $auth = new BasicAuthenticator($this->app);
-        $auth->authenticateRequest($request);
+        $auth->authenticateRequest($request->reveal());
     }
 }

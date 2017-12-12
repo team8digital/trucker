@@ -1,15 +1,8 @@
 <?php
 
-/**
- * This file is part of Trucker
- *
- * (c) Brian Webb <bwebb@indatus.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 namespace Trucker\Finders\Conditions;
 
+use Guzzle\Http\Message\Request;
 use Illuminate\Container\Container;
 use Trucker\Facades\Config;
 
@@ -17,7 +10,7 @@ use Trucker\Facades\Config;
  * Class to manage how sorting requirements for results returned by
  * a request, where the directives are passed as HTTP GET parameters with
  * particular parameter names (defined in the config).
- * The resulting GET params might be something like:
+ * The resulting GET params might be something like:.
  *
  * <code>
  * order_by=someProperty
@@ -26,35 +19,33 @@ use Trucker\Facades\Config;
  */
 class GetParamsResultOrder implements QueryResultOrderInterface
 {
-
     /**
-     * The IoC Container
+     * The IoC Container.
      *
-     * @var Illuminate\Container\Container
+     * @var Container
      */
     protected $app;
 
     /**
      * Var to hold the order by field
-     * that the results shoudl be sorted on
-     * 
+     * that the results shoudl be sorted on.
+     *
      * @var string
      */
     protected $orderByField;
 
     /**
      * Var to hold the order direction
-     * for results to be returned
-     * 
+     * for results to be returned.
+     *
      * @var string
      */
     protected $orderDirection;
 
-
     /**
      * Constructor, likely never called in implementation
-     * but rather through the service provider
-     * 
+     * but rather through the service provider.
+     *
      * @param Container $app
      */
     public function __construct(Container $app)
@@ -62,24 +53,21 @@ class GetParamsResultOrder implements QueryResultOrderInterface
         $this->app = $app;
     }
 
-
     /**
      * Function to create a new instance that should
-     * be setup with the IoC Container etc
-     * 
-     * @return QueryConditionInterface
+     * be setup with the IoC Container etc.
+     *
+     * @return GetParamsResultOrder
      */
     public function newInstance()
     {
-        $instance = new static($this->app);
-        return $instance;
+        return new static($this->app);
     }
 
-
     /**
-     * Function to set the property which the results 
-     * should be ordered by
-     * 
+     * Function to set the property which the results
+     * should be ordered by.
+     *
      * @param string $propertyName
      */
     public function setOrderByField($propertyName)
@@ -87,30 +75,29 @@ class GetParamsResultOrder implements QueryResultOrderInterface
         $this->orderByField = $propertyName;
     }
 
-
     /**
      * Function to set the direction which the results
      * should be sorted by, ascending, descending.
-     * 
+     *
      * @param string $direction
+     *
+     * @throws \Exception
      */
     public function setOrderDirection($direction)
     {
-
         if ($direction != $this->getOrderDirectionAscending() &&
             $direction != $this->getOrderDirectionDescending()
         ) {
-            throw new Exception("Invalid order direction: {$direction}");
+            throw new \Exception("Invalid order direction: {$direction}");
         }
 
         $this->orderDirection = $direction;
     }
 
-
     /**
      * Getter function to return the string that represents
-     * the ascending sort direction
-     * 
+     * the ascending sort direction.
+     *
      * @return string
      */
     public function getOrderDirectionAscending()
@@ -118,11 +105,10 @@ class GetParamsResultOrder implements QueryResultOrderInterface
         return Config::get('result_order.get_params.order_dir_ascending');
     }
 
-
     /**
      * Getter function to return the string that represents
-     * the descending sort direction
-     * 
+     * the descending sort direction.
+     *
      * @return string
      */
     public function getOrderDirectionDescending()
@@ -130,15 +116,13 @@ class GetParamsResultOrder implements QueryResultOrderInterface
         return Config::get('result_order.get_params.order_dir_descending');
     }
 
-
     /**
      * Function to add all the directives that have been
-     * given to the class to a given request object
-     * 
-     * @param Guzzle\Http\Message\Request $request Request passed by reference
-     * @return  void
+     * given to the class to a given request object.
+     *
+     * @param Request $request Request passed by reference
      */
-    public function addToRequest(&$request)
+    public function addToRequest(Request $request)
     {
         $query = $request->getQuery();
 
@@ -157,30 +141,28 @@ class GetParamsResultOrder implements QueryResultOrderInterface
         }
     }
 
-
     /**
      * Function to convert the directives represented in this class
-     * to an array, this is useful for testing
-     * 
+     * to an array, this is useful for testing.
+     *
      * @return array
      */
     public function toArray()
     {
-        $order_by  = Config::get('result_order.get_params.order_by');
+        $order_by = Config::get('result_order.get_params.order_by');
         $order_dir = Config::get('result_order.get_params.order_dir');
 
-        $params             = [];
-        $params[$order_by]  = $this->orderByField;
+        $params = [];
+        $params[$order_by] = $this->orderByField;
         $params[$order_dir] = $this->orderDirection;
 
         return $params;
     }
 
-
     /**
-     * Function to convert the directives represented in this class 
-     * to a querystring, this is useful for testing
-     * 
+     * Function to convert the directives represented in this class
+     * to a querystring, this is useful for testing.
+     *
      * @return string
      */
     public function toQueryString()

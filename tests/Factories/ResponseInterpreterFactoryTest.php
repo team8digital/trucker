@@ -1,11 +1,13 @@
 <?php
 
-use Trucker\Facades\ResponseInterpreterFactory;
+namespace Trucker\Tests\Factories;
+
 use Trucker\Facades\Config;
+use Trucker\Facades\ResponseInterpreterFactory;
+use Trucker\Tests\TruckerTestCase;
 
-class ResponseInterpreterFactoryTest extends TruckerTests
+class ResponseInterpreterFactoryTest extends TruckerTestCase
 {
-
     public function tearDown()
     {
         parent::tearDown();
@@ -16,31 +18,29 @@ class ResponseInterpreterFactoryTest extends TruckerTests
     public function testCreateValidInterpreter()
     {
         $this->swapConfig([
-            'trucker::response.driver' => 'http_status_code'
+            'trucker::response.driver' => 'http_status_code',
         ]);
         Config::setApp($this->app);
 
         $json = ResponseInterpreterFactory::build();
-        $this->assertTrue(
-            ($json instanceof \Trucker\Responses\Interpreters\HttpStatusCodeInterpreter),
-            "Expected transporter to be Trucker\Responses\Interpreters\HttpStatusCodeInterpreter"
+        $this->assertInstanceOf(
+            \Trucker\Responses\Interpreters\HttpStatusCodeInterpreter::class, $json, "Expected transporter to be Trucker\Responses\Interpreters\HttpStatusCodeInterpreter"
         );
 
-        $this->assertTrue(
-            ($json instanceof \Trucker\Responses\Interpreters\ResponseInterpreterInterface),
-            "Expected transporter to implement Trucker\Responses\Interpreters\ResponseInterpreterInterface"
+        $this->assertInstanceOf(
+            \Trucker\Responses\Interpreters\ResponseInterpreterInterface::class, $json, "Expected transporter to implement Trucker\Responses\Interpreters\ResponseInterpreterInterface"
         );
     }
 
     public function testCreateInvalidInterpreter()
     {
         $this->swapConfig([
-            'trucker::response.driver' => 'invalid'
+            'trucker::response.driver' => 'invalid',
         ]);
         Config::setApp($this->app);
 
-        $this->setExpectedException('ReflectionException');
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('ReflectionException');
+        $this->expectException('InvalidArgumentException');
         $foo = ResponseInterpreterFactory::build();
     }
 }

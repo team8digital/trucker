@@ -1,43 +1,33 @@
 <?php
 
-/**
- * This file is part of Trucker
- *
- * (c) Brian Webb <bwebb@indatus.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 namespace Trucker\Finders;
 
 use Illuminate\Container\Container;
+use Trucker\Facades\AuthFactory;
+use Trucker\Facades\Config;
 use Trucker\Facades\RequestFactory;
 use Trucker\Facades\UrlGenerator;
-use Trucker\Facades\Config;
-use Trucker\Facades\AuthFactory;
-use Trucker\Responses\Collection;
 use Trucker\Finders\Conditions\QueryConditionInterface;
 use Trucker\Finders\Conditions\QueryResultOrderInterface;
 use Trucker\Resource\Model;
+use Trucker\Responses\Collection;
 
 /**
- * Class for finding collections of models over the remote API
+ * Class for finding collections of models over the remote API.
  *
  * @author Brian Webb <bwebb@indatus.com>
  */
 class CollectionFinder
 {
-
     /**
-     * The IoC Container
+     * The IoC Container.
      *
-     * @var Illuminate\Container\Container
+     * @var Container
      */
     protected $app;
 
-
     /**
-     * Build a new CollectionFinder
+     * Build a new CollectionFinder.
      *
      * @param Container $app
      */
@@ -46,16 +36,16 @@ class CollectionFinder
         $this->app = $app;
     }
 
-
     /**
      * Function to fetch a collection of Trucker\Resource\Model object
      * from the remote API.
-     * 
-     * @param  Model                      $model       Instance of entity type being fetched
-     * @param  QueryConditionInterface    $condition   Query conditions for the request
-     * @param  QueryResultOrderInterface  $resultOrder Result ordering requirements for the request
-     * @param  array                      $getParams   Additional GET parameters to send w/ request
-     * @return Trucker\Responses\Collection
+     *
+     * @param Model                     $model       Instance of entity type being fetched
+     * @param QueryConditionInterface   $condition   Query conditions for the request
+     * @param QueryResultOrderInterface $resultOrder Result ordering requirements for the request
+     * @param array                     $getParams   Additional GET parameters to send w/ request
+     *
+     * @return Collection
      */
     public function fetch(
         Model $model,
@@ -63,10 +53,9 @@ class CollectionFinder
         QueryResultOrderInterface $resultOrder = null,
         array $getParams = []
     ) {
-
         //get a request object
         $request = RequestFactory::build();
-        
+
         //init the request
         $request->createRequest(
             Config::get('request.base_uri'),
@@ -99,16 +88,16 @@ class CollectionFinder
         $data = $response->parseResponseToData();
 
         //make an array to hold results
-        $records = array();
+        $records = [];
 
         //figure out wether a collection key is used
         $collection_key = Config::get('resource.collection_key');
 
         //set records array appropriatley
+        $recordCollection = $data;
+
         if (isset($collection_key)) {
             $recordCollection = $data[$collection_key];
-        } else {
-            $recordCollection = $data;
         }
 
         //create an array of popuplated results
@@ -123,7 +112,6 @@ class CollectionFinder
 
             //add the instance to the records array
             $records[] = $instance;
-
         }//end foreach
 
         //create a collection object to return
@@ -132,7 +120,7 @@ class CollectionFinder
         // if there was a collection_key, put any extra data that was returned
         // outside the collection key in the metaData attribute
         if (isset($collection_key)) {
-            $collection->metaData = array_diff_key($data, array_flip((array) array($collection_key)));
+            $collection->metaData = array_diff_key($data, array_flip([$collection_key]));
         }
 
         return $collection;

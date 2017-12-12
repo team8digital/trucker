@@ -1,21 +1,24 @@
 <?php
 
-use Trucker\Support\ConfigManager;
+namespace Trucker\Tests\Support;
+
+use Illuminate\Config\Repository;
+use Illuminate\Container\Container;
 use Mockery as m;
+use Trucker\Support\ConfigManager;
+use Trucker\Tests\TruckerTestCase;
 
-class ConfigManagerTest extends TruckerTests
+class ConfigManagerTest extends TruckerTestCase
 {
-
     public function testGetApp()
     {
         $cm = new ConfigManager($this->app);
         $this->assertEquals($this->app, $cm->getApp());
     }
 
-    
     public function testSetApp()
     {
-        $mApp = m::mock('Illuminate\Container\Container');
+        $mApp = m::mock(Container::class);
         $cm = new ConfigManager($this->app);
         $cm->setApp($mApp);
         $this->assertEquals($mApp, $cm->getApp());
@@ -29,9 +32,8 @@ class ConfigManagerTest extends TruckerTests
 
     public function testSet()
     {
-
-        $app = new Illuminate\Container\Container;
-        $config = m::mock('Illuminate\Config\Repository');
+        $app = new Container();
+        $config = m::mock(Repository::class);
 
         $config->shouldReceive('set')
             ->once()
@@ -42,7 +44,7 @@ class ConfigManagerTest extends TruckerTests
             ->with('trucker::request.driver')
             ->andReturn('foo');
 
-        $app['config']  = $config;
+        $app['config'] = $config;
 
         $cm = new ConfigManager($app);
         $cm->set('request.driver', 'foo');
@@ -52,7 +54,7 @@ class ConfigManagerTest extends TruckerTests
     public function testContains()
     {
         $this->swapConfig([
-                'trucker::response.http_status.success' => [200, 201]
+                'trucker::response.http_status.success' => [200, 201],
             ]);
         $cm = new ConfigManager($this->app);
         $this->assertTrue($cm->contains('response.http_status.success', 200));

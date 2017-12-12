@@ -1,39 +1,39 @@
 <?php
 
+namespace Trucker\Tests\Factories;
+
 use Trucker\Facades\ConditionFactory;
 use Trucker\Facades\Config;
+use Trucker\Tests\TruckerTestCase;
 
-class QueryConditionFactoryTest extends TruckerTests
+class QueryConditionFactoryTest extends TruckerTestCase
 {
     public function testCreateValidQueryConditionDriver()
     {
         $this->swapConfig([
-            'trucker::query_condition.driver' => 'get_array_params'
+            'trucker::query_condition.driver' => 'get_array_params',
         ]);
         Config::setApp($this->app);
 
         $cond = ConditionFactory::build();
-        $this->assertTrue(
-            ($cond instanceof \Trucker\Finders\Conditions\QueryConditionInterface),
-            "Expected transporter to implement \Trucker\Finders\Conditions\QueryConditionInterface"
+        $this->assertInstanceOf(
+            \Trucker\Finders\Conditions\QueryConditionInterface::class, $cond, "Expected transporter to implement \Trucker\Finders\Conditions\QueryConditionInterface"
         );
 
-        $this->assertTrue(
-            ($cond instanceof \Trucker\Finders\Conditions\GetArrayParamsQueryCondition),
-            "Expected transporter to be \Trucker\Finders\Conditions\GetArrayParamsQueryCondition"
+        $this->assertInstanceOf(
+            \Trucker\Finders\Conditions\GetArrayParamsQueryCondition::class, $cond, "Expected transporter to be \Trucker\Finders\Conditions\GetArrayParamsQueryCondition"
         );
     }
-
 
     public function testCreateInvalidQueryConditionDriver()
     {
         $this->swapConfig([
-            'trucker::query_condition.driver' => 'invalid'
+            'trucker::query_condition.driver' => 'invalid',
         ]);
         Config::setApp($this->app);
 
-        $this->setExpectedException('ReflectionException');
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('ReflectionException');
+        $this->expectException('InvalidArgumentException');
         $foo = ConditionFactory::build();
     }
 }

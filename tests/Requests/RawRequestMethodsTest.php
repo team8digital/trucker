@@ -1,23 +1,23 @@
 <?php
 
-require_once __DIR__.'/../test_helpers/GuzzleTestingTrait.php';
+namespace Trucker\Tests\Requests;
 
 use Trucker\Facades\RequestFactory;
+use Trucker\Tests\Helpers\GuzzleTestingTrait;
+use Trucker\Tests\TruckerTestCase;
 
-class RawRequestMethodsTest extends TruckerTests
+class RawRequestMethodsTest extends TruckerTestCase
 {
-
     use GuzzleTestingTrait;
-
 
     public function testRawGet()
     {
         //some vars for our test
-        $uri           = '/users';
-        $base_uri      = 'http://some-api.com';
-        $queryParams   = ['foo' => 'bar', 'biz' => 'bang'];
+        $uri = '/users';
+        $base_uri = 'http://some-api.com';
+        $queryParams = ['foo' => 'bar', 'biz' => 'bang'];
         $response_body = json_encode(['id' => 123, 'name' => 'foo']);
-        $headers = ['Content-Type'  => 'application/json'];
+        $headers = ['Content-Type' => 'application/json'];
 
         //mock the response we expect
         $this->mockHttpResponse(
@@ -26,7 +26,7 @@ class RawRequestMethodsTest extends TruckerTests
             //
             $this->initGuzzleRequestTest([
                 'trucker::request.base_uri' => $base_uri,
-                'trucker::request.driver' => 'rest'
+                'trucker::request.driver' => 'rest',
             ]),
             //
             //expected status
@@ -36,24 +36,23 @@ class RawRequestMethodsTest extends TruckerTests
             //HTTP response headers
             //
             [
-                'Location'     => $base_uri.'/'.$uri,
-                'Content-Type' => 'application/json'
+                'Location' => $base_uri . '/' . $uri,
+                'Content-Type' => 'application/json',
             ],
             //
             //response to return
             //
             $response_body
         );
-        
+
         //execute what we're testing
         $request = RequestFactory::build();
         $rawResponse = $request->rawGet($uri, $queryParams, $headers);
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
-
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions(
             'GET',
@@ -65,21 +64,19 @@ class RawRequestMethodsTest extends TruckerTests
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue(
-            $rawResponse instanceof \Trucker\Responses\RawResponse
+        $this->assertInstanceOf(
+            \Trucker\Responses\RawResponse::class, $rawResponse
         );
     }
-
-
 
     public function testRawPost()
     {
         //some vars for our test
-        $uri           = '/users';
-        $base_uri      = 'http://some-api.com';
-        $postParams   = ['foo' => 'bar', 'biz' => 'bang'];
+        $uri = '/users';
+        $base_uri = 'http://some-api.com';
+        $postParams = ['foo' => 'bar', 'biz' => 'bang'];
         $response_body = json_encode(['id' => 123, 'name' => 'foo']);
-        $headers = ['Content-Type'  => 'application/json'];
+        $headers = ['Content-Type' => 'application/json'];
 
         //mock the response we expect
         $this->mockHttpResponse(
@@ -88,7 +85,7 @@ class RawRequestMethodsTest extends TruckerTests
             //
             $this->initGuzzleRequestTest([
                 'trucker::request.base_uri' => $base_uri,
-                'trucker::request.driver' => 'rest'
+                'trucker::request.driver' => 'rest',
             ]),
             //
             //expected status
@@ -98,24 +95,23 @@ class RawRequestMethodsTest extends TruckerTests
             //HTTP response headers
             //
             [
-                'Location'     => $base_uri.'/'.$uri,
-                'Content-Type' => 'application/json'
+                'Location' => $base_uri . '/' . $uri,
+                'Content-Type' => 'application/json',
             ],
             //
             //response to return
             //
             $response_body
         );
-        
+
         //execute what we're testing
         $request = RequestFactory::build();
         $rawResponse = $request->rawPost($uri, $postParams, $headers);
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
-
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions(
             'POST',
@@ -128,21 +124,19 @@ class RawRequestMethodsTest extends TruckerTests
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue(
-            $rawResponse instanceof \Trucker\Responses\RawResponse
+        $this->assertInstanceOf(
+            \Trucker\Responses\RawResponse::class, $rawResponse
         );
     }
-
-
 
     public function testRawPut()
     {
         //some vars for our test
-        $uri           = '/users/1';
-        $base_uri      = 'http://some-api.com';
-        $postParams   = ['foo' => 'bar', 'biz' => 'bang'];
+        $uri = '/users/1';
+        $base_uri = 'http://some-api.com';
+        $postParams = ['foo' => 'bar', 'biz' => 'bang'];
         $response_body = json_encode(['id' => 123, 'name' => 'foo']);
-        $headers = ['Content-Type'  => 'application/json'];
+        $headers = ['Content-Type' => 'application/json'];
 
         //mock the response we expect
         $this->mockHttpResponse(
@@ -151,7 +145,7 @@ class RawRequestMethodsTest extends TruckerTests
             //
             $this->initGuzzleRequestTest([
                 'trucker::request.base_uri' => $base_uri,
-                'trucker::request.driver' => 'rest'
+                'trucker::request.driver' => 'rest',
             ]),
             //
             //expected status
@@ -161,24 +155,23 @@ class RawRequestMethodsTest extends TruckerTests
             //HTTP response headers
             //
             [
-                'Location'     => $base_uri.'/'.$uri,
-                'Content-Type' => 'application/json'
+                'Location' => $base_uri . '/' . $uri,
+                'Content-Type' => 'application/json',
             ],
             //
             //response to return
             //
             $response_body
         );
-        
+
         //execute what we're testing
         $request = RequestFactory::build();
         $rawResponse = $request->rawPut($uri, $postParams, $headers);
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
-
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions(
             'PUT',
@@ -191,21 +184,19 @@ class RawRequestMethodsTest extends TruckerTests
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue(
-            $rawResponse instanceof \Trucker\Responses\RawResponse
+        $this->assertInstanceOf(
+            \Trucker\Responses\RawResponse::class, $rawResponse
         );
     }
-
-
 
     public function testRawPatch()
     {
         //some vars for our test
-        $uri           = '/users/1';
-        $base_uri      = 'http://some-api.com';
-        $postParams   = ['foo' => 'bar', 'biz' => 'bang'];
+        $uri = '/users/1';
+        $base_uri = 'http://some-api.com';
+        $postParams = ['foo' => 'bar', 'biz' => 'bang'];
         $response_body = json_encode(['id' => 123, 'name' => 'foo']);
-        $headers = ['Content-Type'  => 'application/json'];
+        $headers = ['Content-Type' => 'application/json'];
 
         //mock the response we expect
         $this->mockHttpResponse(
@@ -214,7 +205,7 @@ class RawRequestMethodsTest extends TruckerTests
             //
             $this->initGuzzleRequestTest([
                 'trucker::request.base_uri' => $base_uri,
-                'trucker::request.driver' => 'rest'
+                'trucker::request.driver' => 'rest',
             ]),
             //
             //expected status
@@ -224,24 +215,23 @@ class RawRequestMethodsTest extends TruckerTests
             //HTTP response headers
             //
             [
-                'Location'     => $base_uri.'/'.$uri,
-                'Content-Type' => 'application/json'
+                'Location' => $base_uri . '/' . $uri,
+                'Content-Type' => 'application/json',
             ],
             //
             //response to return
             //
             $response_body
         );
-        
+
         //execute what we're testing
         $request = RequestFactory::build();
         $rawResponse = $request->rawPatch($uri, $postParams, $headers);
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
-
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions(
             'PUT',
@@ -254,21 +244,19 @@ class RawRequestMethodsTest extends TruckerTests
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue(
-            $rawResponse instanceof \Trucker\Responses\RawResponse
+        $this->assertInstanceOf(
+            \Trucker\Responses\RawResponse::class, $rawResponse
         );
     }
-
-
 
     public function testRawDelete()
     {
         //some vars for our test
-        $uri           = '/users/1';
-        $base_uri      = 'http://some-api.com';
-        $queryParams   = ['foo' => 'bar', 'biz' => 'bang'];
+        $uri = '/users/1';
+        $base_uri = 'http://some-api.com';
+        $queryParams = ['foo' => 'bar', 'biz' => 'bang'];
         $response_body = json_encode(['id' => 123, 'name' => 'foo']);
-        $headers = ['Content-Type'  => 'application/json'];
+        $headers = ['Content-Type' => 'application/json'];
 
         //mock the response we expect
         $this->mockHttpResponse(
@@ -277,7 +265,7 @@ class RawRequestMethodsTest extends TruckerTests
             //
             $this->initGuzzleRequestTest([
                 'trucker::request.base_uri' => $base_uri,
-                'trucker::request.driver' => 'rest'
+                'trucker::request.driver' => 'rest',
             ]),
             //
             //expected status
@@ -287,24 +275,23 @@ class RawRequestMethodsTest extends TruckerTests
             //HTTP response headers
             //
             [
-                'Location'     => $base_uri.'/'.$uri,
-                'Content-Type' => 'application/json'
+                'Location' => $base_uri . '/' . $uri,
+                'Content-Type' => 'application/json',
             ],
             //
             //response to return
             //
             $response_body
         );
-        
+
         //execute what we're testing
         $request = RequestFactory::build();
         $rawResponse = $request->rawDelete($uri, $queryParams, $headers);
 
         //get objects to assert on
-        $history     = $this->getHttpClientHistory();
-        $request     = $history->getLastRequest();
-        $response    = $history->getLastResponse();
-
+        $history = $this->getHttpClientHistory();
+        $request = $history->getLastRequest();
+        $response = $history->getLastResponse();
 
         $this->makeGuzzleAssertions(
             'DELETE',
@@ -316,8 +303,8 @@ class RawRequestMethodsTest extends TruckerTests
         //assert that the HTTP RESPONSE is what is expected
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response_body, $response->getBody(true));
-        $this->assertTrue(
-            $rawResponse instanceof \Trucker\Responses\RawResponse
+        $this->assertInstanceOf(
+            \Trucker\Responses\RawResponse::class, $rawResponse
         );
     }
 }

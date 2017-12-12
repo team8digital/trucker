@@ -1,13 +1,5 @@
 <?php
 
-/**
- * This file is part of Trucker
- *
- * (c) Brian Webb <bwebb@indatus.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 namespace Trucker\Requests;
 
 use Illuminate\Container\Container;
@@ -17,26 +9,25 @@ use Trucker\Requests\Auth\AuthenticationInterface;
 use Trucker\Resource\Model;
 
 /**
- * Interface to dictate management of query conditions for a request
+ * Interface to dictate management of query conditions for a request.
  */
 interface RequestableInterface
 {
-
     public function __construct(Container $app, $client = null);
 
-    public function &getClient();
+    public function getClient();
 
-    public function createRequest($baseUri, $path, $httpMethod = 'GET', $requestHeaders = array(), $httpMethodParam = null);
+    public function createRequest($baseUri, $path, $httpMethod = 'GET', array $requestHeaders = [], $httpMethodParam = null);
 
-    public function setHeaders($requestHeaders = array());
+    public function setHeaders(array $requestHeaders = []);
 
     public function setBody($body, $contentType = null);
 
-    public function setPostParameters($params = array());
+    public function setPostParameters(array $params = []);
 
-    public function setGetParameters($params = array());
+    public function setGetParameters(array $params = []);
 
-    public function setFileParameters($params = array());
+    public function setFileParameters(array $params = []);
 
     public function setModelProperties(Model $model);
 

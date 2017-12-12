@@ -1,5 +1,6 @@
-<?php return array(
+<?php
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Response Interpreter Driver
@@ -14,7 +15,7 @@
     |                    config section.
     |
     */
-   
+
    'driver' => 'http_status_code',
 
    /*
@@ -23,12 +24,11 @@
     |--------------------------------------------------------------------------
     |
     | When making API requests the HTTP Status code returned with the data will
-    | be used to determine the success or error of the request.  
+    | be used to determine the success or error of the request.
     |
     */
-   
-    'http_status' => array(
 
+    'http_status' => [
         //successful request
         'success' => [200, 201],
 
@@ -40,7 +40,5 @@
 
         //an error was encountered when processing the request
         'error' => 500,
-
-    ),
-
-);
+    ],
+];

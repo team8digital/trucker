@@ -1,35 +1,37 @@
 <?php
 
-class Bootstrapper extends TruckerTests
+namespace Trucker\Tests;
+
+use Trucker\Bootstrapper;
+
+class BootstrapperTest extends TruckerTestCase
 {
     /**
-     * The bootstrapper instance
+     * The bootstrapper instance.
      *
      * @var Bootstrapper
      */
     protected $bootstrapper;
 
     /**
-     * Setup the tests
+     * Setup the tests.
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->bootstrapper = new Trucker\Bootstrapper($this->app);
+        $this->bootstrapper = new Bootstrapper($this->app);
         unset($this->app['path.base']);
     }
 
     /**
-     * Tears down the tests
-     *
-     * @return void
+     * Tears down the tests.
      */
     public function tearDown()
     {
         parent::tearDown();
-        
-        $dir = __DIR__.'/../.trucker';
+
+        $dir = __DIR__ . '/../.trucker';
         if (file_exists($dir)) {
             $this->rrmdir($dir);
         }
@@ -47,10 +49,6 @@ class Bootstrapper extends TruckerTests
         rmdir($dir);
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //////////////////////////////// TESTS /////////////////////////////
-    ////////////////////////////////////////////////////////////////////
-
     public function testDoesntRebindBasePath()
     {
         $base = 'src';
@@ -64,15 +62,15 @@ class Bootstrapper extends TruckerTests
     {
         $this->bootstrapper->bindPaths();
 
-        $this->assertEquals(realpath(__DIR__.'/..'), $this->app['path.base']);
+        $this->assertEquals(dirname(__DIR__) . '', $this->app['path.base']);
     }
 
     public function testCanBindConfigurationPaths()
     {
         $this->bootstrapper->bindPaths();
 
-        $root = realpath(__DIR__.'/..');
-        $this->assertEquals($root.'/.trucker', $this->app['path.trucker.config']);
+        $root = dirname(__DIR__) . '';
+        $this->assertEquals($root . '/.trucker', $this->app['path.trucker.config']);
     }
 
     public function testCanExportConfiguration()
@@ -80,16 +78,16 @@ class Bootstrapper extends TruckerTests
         $this->bootstrapper->bindPaths();
         $this->bootstrapper->exportConfiguration();
 
-        $this->assertFileExists(__DIR__.'/../.trucker');
+        $this->assertFileExists(__DIR__ . '/../.trucker');
     }
 
     public function testCanReplaceStubsInConfigurationFile()
     {
         $this->bootstrapper->bindPaths();
         $path = $this->bootstrapper->exportConfiguration();
-        $this->bootstrapper->updateConfiguration($path, array('basic_username' => 'foo'));
+        $this->bootstrapper->updateConfiguration($path, ['basic_username' => 'foo']);
 
-        $this->assertFileExists(__DIR__.'/../.trucker');
-        $this->assertContains('foo', file_get_contents(__DIR__.'/../.trucker/auth.php'));
+        $this->assertFileExists(__DIR__ . '/../.trucker');
+        $this->assertContains('foo', file_get_contents(__DIR__ . '/../.trucker/auth.php'));
     }
 }
