@@ -4,6 +4,7 @@ namespace Trucker\Tests\Helpers;
 
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\Response;
+use Guzzle\Plugin\History\HistoryPlugin;
 use Guzzle\Plugin\Mock\MockPlugin;
 use Trucker\Facades\Config;
 use Trucker\Facades\RequestFactory;
@@ -11,9 +12,7 @@ use Trucker\Facades\RequestFactory;
 trait GuzzleTestingTrait
 {
     /**
-     * History Guzzle Plugin.
-     *
-     * @var [type]
+     * @var HistoryPlugin
      */
     protected $history;
 
@@ -27,7 +26,7 @@ trait GuzzleTestingTrait
     public function trackHistory($client, $historyLimit = 5)
     {
         //record history for this client
-        $this->history = new \Guzzle\Plugin\History\HistoryPlugin();
+        $this->history = new HistoryPlugin();
         $this->history->setLimit($historyLimit);
         $client->addSubscriber($this->history);
     }
@@ -57,7 +56,7 @@ trait GuzzleTestingTrait
      * Function to return the Guzzle History plugin
      * to look at requests for a client.
      *
-     * @return Guzzle\Plugin\History
+     * @return HistoryPlugin
      */
     public function getHttpClientHistory()
     {
