@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trucker\Responses\ErrorHandlers;
 
 use Illuminate\Container\Container;

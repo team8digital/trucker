@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trucker\Responses;
 
 use Guzzle\Http\Message\Response as GuzzleResponse;

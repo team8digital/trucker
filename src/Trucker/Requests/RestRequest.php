@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trucker\Requests;
 
 use Guzzle\Common\Event;

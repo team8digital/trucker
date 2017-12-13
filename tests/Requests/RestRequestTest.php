@@ -4,12 +4,12 @@ namespace Trucker\Tests\Requests;
 
 use Guzzle\Http\Client;
 use Guzzle\Http\EntityBody;
+use Guzzle\Http\Message\EntityEnclosingRequest;
 use Guzzle\Http\Message\Request;
 use Guzzle\Http\Message\Response;
 use Guzzle\Http\QueryString;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
-use Mockery as m;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Trucker\Facades\Config;
@@ -167,6 +167,7 @@ class RestRequestTest extends TruckerTestCase
     public function testSettingHeaders()
     {
         $request = $this->simpleMockRequest([
+            ['method' => 'setHeader', 'args' => ['Cache-Control', 'no-cache, must-revalidate']],
             [
                 'method' => 'setHeaders',
                 'args' => [[
@@ -174,7 +175,6 @@ class RestRequestTest extends TruckerTestCase
                     'Content-Type' => 'application/json',
                 ]],
             ],
-            ['method' => 'setHeader', 'args' => ['Cache-Control', 'no-cache, must-revalidate']],
         ]);
 
         $headers = ['Cache-Control' => 'no-cache, must-revalidate'];
@@ -295,6 +295,7 @@ class RestRequestTest extends TruckerTestCase
     {
         $request = $this->simpleMockRequest(
             [
+                ['method' => 'setPostField', 'args' => ['_method', 'PUT']],
                 [
                     'method' => 'setHeaders',
                     'args' => [[
@@ -302,7 +303,6 @@ class RestRequestTest extends TruckerTestCase
                         'Content-Type' => 'application/json',
                     ]],
                 ],
-                ['method' => 'setPostField', 'args' => ['_method', 'PUT']],
             ],
             'http://example.com',
             '/users/1',
@@ -326,20 +326,24 @@ class RestRequestTest extends TruckerTestCase
         $uri = '/users',
         $method = 'get'
     ) {
-        $mockRequest = m::mock('Guzzle\Http\Message\Request');
+        $mockRequest = $this
+            ->getMockBuilder(EntityEnclosingRequest::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $at = 0;
 
         foreach ($shouldReceive as $sr) {
-            $mr = $mockRequest->shouldReceive($sr['method']);
+            $mr = $mockRequest->expects($this->at($at++))
+                ->method($sr['method']);
 
             if (array_key_exists('args', $sr)) {
                 call_user_func_array([$mr, 'with'], $sr['args']);
             }
 
             if (array_key_exists('return', $sr)) {
-                $mr->andReturn($sr['return']);
+                $mr->willReturn($sr['return']);
             }
-
-            $mr->times(array_key_exists('times', $sr) ? $sr['times'] : 1);
         }
 
         $client = $this->prophesize(Client::class);

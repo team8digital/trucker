@@ -3,7 +3,6 @@
 namespace Trucker\Tests\Requests;
 
 use Illuminate\Container\Container;
-use Mockery as m;
 use Trucker\Facades\UrlGenerator;
 use Trucker\Tests\Stubs\User;
 use Trucker\Tests\Stubs\UserPreferenceSetting;
@@ -126,10 +125,10 @@ class UrlGeneratorTest extends TruckerTestCase
 
     public function testAppGetter()
     {
-        $app = m::mock(Container::class);
-        $urlGen = new \Trucker\Url\UrlGenerator($app);
+        $app = $this->prophesize(Container::class);
+        $urlGen = new \Trucker\Url\UrlGenerator($app->reveal());
         $this->assertEquals(
-            $app,
+            $app->reveal(),
             $urlGen->getApp()
         );
     }

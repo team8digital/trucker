@@ -4,7 +4,8 @@ namespace Trucker\Tests\Responses;
 
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
-use Mockery as m;
+use Prophecy\Argument;
+use Prophecy\Prediction\CallTimesPrediction;
 use Trucker\Facades\Config;
 use Trucker\Facades\Response;
 use Trucker\Tests\TruckerTestCase;
@@ -13,24 +14,26 @@ class ResponseTest extends TruckerTestCase
 {
     public function testDynamicFunctionCallOnResponse()
     {
-        $gResponse = m::mock(\Guzzle\Http\Message\Response::class);
-        $gResponse->shouldReceive('getStatusCode')
-            ->once()
-            ->andReturn(200);
-        $response = new \Trucker\Responses\Response($this->app, $gResponse);
+        $gResponse = $this->prophesize(\Guzzle\Http\Message\Response::class);
+        $gResponse
+            ->getStatusCode()
+            ->willReturn(200)
+            ->shouldBeCalled();
+        $response = new \Trucker\Responses\Response($this->app, $gResponse->reveal());
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetOption()
     {
-        $config = m::mock(Repository::class);
-        $config->shouldIgnoreMissing();
-        $config->shouldReceive('get')->with('trucker::transporter.driver')
-            ->andReturn('json');
+        $config = $this->prophesize(Repository::class);
+        $config
+            ->get(Argument::exact('trucker::transporter.driver'))
+            ->willReturn('json');
 
-        $app = m::mock(Container::class);
-        $app->shouldIgnoreMissing();
-        $app->shouldReceive('offsetGet')->with('config')->andReturn($config);
+        $app = $this->prophesize(Container::class);
+        $app
+            ->offsetGet(Argument::exact('config'))
+            ->willReturn($config);
 
         $transporter = Config::get('transporter.driver');
 
@@ -39,12 +42,13 @@ class ResponseTest extends TruckerTestCase
 
     public function testNewInstanceCreator()
     {
-        $gResponse = m::mock(\Guzzle\Http\Message\Response::class);
-        $gResponse->shouldReceive('getStatusCode')
-            ->times(2)
-            ->andReturn(200);
+        $gResponse = $this->prophesize(\Guzzle\Http\Message\Response::class);
+        $gResponse
+            ->getStatusCode()
+            ->willReturn(200)
+            ->shouldBeCalled();
 
-        $i = Response::newInstance($this->app, $gResponse);
+        $i = Response::newInstance($this->app, $gResponse->reveal());
         $this->assertInstanceOf(
             \Trucker\Responses\Response::class, $i
         );
@@ -57,22 +61,26 @@ class ResponseTest extends TruckerTestCase
 
     public function testParseJsonResponseToData()
     {
-        $config = m::mock(Repository::class);
-        $config->shouldIgnoreMissing();
-        $config->shouldReceive('get')->with('trucker::transporter.driver')
-            ->andReturn('json');
+        $config = $this->prophesize(Repository::class);
+        $config
+            ->get(Argument::exact('trucker::transporter.driver'))
+            ->willReturn('json');
 
-        $app = m::mock(Container::class);
-        $app->shouldIgnoreMissing();
-        $app->shouldReceive('offsetGet')->with('config')->andReturn($config);
+        $app = $this->prophesize(Container::class);
+        $app
+            ->offsetGet(Argument::exact('config'))
+            ->willReturn($config);
 
         $data = ['foo' => 'bar'];
 
-        $gResponse = m::mock(\Guzzle\Http\Message\Response::class);
-        $gResponse->shouldReceive('json')
-            ->once()
-            ->andReturn($data);
-        $response = new \Trucker\Responses\Response($app, $gResponse);
+        $gResponse = $this->prophesize(\Guzzle\Http\Message\Response::class);
+        $gResponse
+            ->json()
+            ->willReturn($data)
+            ->should(new CallTimesPrediction(1));
+
+        $response = new \Trucker\Responses\Response($app->reveal(), $gResponse->reveal());
+
         $this->assertTrue(
             $this->arraysAreSimilar($data, $response->parseResponseToData())
         );
@@ -80,25 +88,27 @@ class ResponseTest extends TruckerTestCase
 
     public function testParseJsonResponseStringToObject()
     {
-        $config = m::mock(Repository::class);
-        $config->shouldIgnoreMissing();
-        $config->shouldReceive('get')->with('trucker::transporter.driver')
-            ->andReturn('json');
+        $config = $this->prophesize(Repository::class);
+        $config
+            ->get(Argument::exact('trucker::transporter.driver'))
+            ->willReturn('json');
 
-        $app = m::mock(Container::class);
-        $app->shouldIgnoreMissing();
-        $app->shouldReceive('offsetGet')->with('config')->andReturn($config);
+        $app = $this->prophesize(Container::class);
+        $app
+            ->offsetGet(Argument::exact('config'))
+            ->willReturn($config);
 
         $data = ['foo' => 'bar'];
         $dataJson = json_encode($data);
         $decodedJson = json_decode($dataJson);
 
-        $gResponse = m::mock(\Guzzle\Http\Message\Response::class);
-        $gResponse->shouldReceive('getBody')
-            ->with(true)
-            ->once()
-            ->andReturn($dataJson);
-        $response = new \Trucker\Responses\Response($app, $gResponse);
+        $gResponse = $this->prophesize(\Guzzle\Http\Message\Response::class);
+        $gResponse->getBody(Argument::exact(true))
+            ->shouldBeCalled(new CallTimesPrediction(1))
+            ->willReturn($dataJson);
+
+        $response = new \Trucker\Responses\Response($app->reveal(), $gResponse->reveal());
+
         $this->assertEquals(
             $decodedJson,
             $response->parseResponseStringToObject()

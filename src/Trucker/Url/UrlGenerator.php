@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trucker\Url;
 
 use Doctrine\Common\Inflector\Inflector;

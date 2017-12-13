@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trucker\Transporters;
 
 use Guzzle\Http\Message\Request;

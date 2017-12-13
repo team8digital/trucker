@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trucker\Resource;
 
 use Illuminate\Container\Container;

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trucker;
 
 use Illuminate\Config\FileLoader;

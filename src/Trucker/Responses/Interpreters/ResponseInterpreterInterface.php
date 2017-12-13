@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trucker\Responses\Interpreters;
 
 use Illuminate\Container\Container;
