@@ -1,7 +1,9 @@
 # Trucker
 
-[![Latest Stable Version](https://poser.pugx.org/alexmanno/trucker/version)](https://packagist.org/packages/alexmanno/trucker) 
-[![Latest Unstable Version](https://poser.pugx.org/alexmanno/trucker/v/unstable)](https://packagist.org/packages/alexmanno/trucker) 
+[![Latest Stable Version](https://poser.pugx.org/alexmanno/trucker/v/stable)](https://packagist.org/packages/alexmanno/trucker)
+[![Latest Unstable Version](https://poser.pugx.org/alexmanno/trucker/v/unstable)](https://packagist.org/packages/alexmanno/trucker)
+[![Total Downloads](https://poser.pugx.org/alexmanno/trucker/downloads)](https://packagist.org/packages/alexmanno/trucker)
+[![License](https://poser.pugx.org/alexmanno/trucker/license)](https://packagist.org/packages/alexmanno/trucker)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alexmanno/trucker/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/alexmanno/trucker/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/alexmanno/trucker/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/alexmanno/trucker/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/alexmanno/trucker/badges/build.png?b=master)](https://scrutinizer-ci.com/g/alexmanno/trucker/build-status/master)
