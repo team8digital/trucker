@@ -6,7 +6,7 @@ namespace Trucker\Responses;
  * Result class returned from Trucker when
  * a raw request is initiated.
  *
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class RawResponse extends BaseResponse
 {

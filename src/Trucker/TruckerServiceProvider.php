@@ -10,7 +10,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Service Provider for interacting with the Trucker class.
  *
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class TruckerServiceProvider extends ServiceProvider
 {
@@ -176,7 +176,7 @@ class TruckerServiceProvider extends ServiceProvider
     protected function registerConfig(Container $app)
     {
         // Register config file(filename)
-        $app['config']->package('indatus/trucker', __DIR__ . '/../config');
+        $app['config']->package('alexmanno/trucker', __DIR__ . '/../config');
         $app['config']->getLoader();
 
         // Register custom config

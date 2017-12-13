@@ -8,7 +8,7 @@ use Trucker\TruckerServiceProvider;
 /**
  * Facade class for interacting with the Authenticator classes.
  *
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class AuthFactory extends Facade
 {

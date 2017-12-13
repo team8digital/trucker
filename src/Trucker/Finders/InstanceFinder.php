@@ -13,7 +13,7 @@ use Trucker\Resource\Model;
 /**
  * Class for finding model instances over the remote API.
  *
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class InstanceFinder
 {

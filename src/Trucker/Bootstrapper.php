@@ -7,8 +7,7 @@ use Illuminate\Container\Container;
 /**
  * Finds configurations and paths.
  *
- * @author Maxime Fabre <ehtnam6@gmail.com>
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class Bootstrapper
 {
@@ -47,7 +46,7 @@ class Bootstrapper
     {
         // Return path to Laravel configuration
         if ($this->app->bound('path')) {
-            $laravel = $this->app['path'] . '/config/packages/indatus/trucker';
+            $laravel = $this->app['path'] . '/config/packages/alexmanno/trucker';
             if (file_exists($laravel)) {
                 return $laravel;
             }

@@ -6,7 +6,7 @@ namespace Trucker\Responses;
  * Collection class returned from CollectionFinder when
  * a colleciton of results is requested.
  *
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class Collection implements \Iterator
 {

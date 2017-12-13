@@ -1,7 +1,7 @@
 # Trucker
 
-[![Latest Stable Version](https://poser.pugx.org/indatus/trucker/version)](https://packagist.org/packages/indatus/trucker) 
-[![Latest Unstable Version](https://poser.pugx.org/indatus/trucker/v/unstable)](https://packagist.org/packages/indatus/trucker) 
+[![Latest Stable Version](https://poser.pugx.org/alexmanno/trucker/version)](https://packagist.org/packages/alexmanno/trucker) 
+[![Latest Unstable Version](https://poser.pugx.org/alexmanno/trucker/v/unstable)](https://packagist.org/packages/alexmanno/trucker) 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alexmanno/trucker/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/alexmanno/trucker/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/alexmanno/trucker/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/alexmanno/trucker/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/alexmanno/trucker/badges/build.png?b=master)](https://scrutinizer-ci.com/g/alexmanno/trucker/build-status/master)
@@ -80,7 +80,7 @@ $results = Product::all(); //find a collection
 You can install the library via [Composer](http://getcomposer.org) by adding the following line to the **require** block of your *composer.json* file:
 
 ````
-"indatus/trucker": "dev-master"
+"alexmanno/trucker": "dev-master"
 ````
 
 > For Laravel 5 support, see the [`laravel-5` branch](https://github.com/Indatus/trucker/tree/laravel-5#config-laravel)
@@ -93,10 +93,10 @@ Trucker's config files are where you'd define constant things about the API your
 
 ### Configure in Laravel
 
-Trucker works well with the [Laravel](http://laravel.com) framework.  If your using Trucker within Laravel, you just need to run the following command to publish the Trucker config files to the **app/config/packages/indatus/trucker** folder.
+Trucker works well with the [Laravel](http://laravel.com) framework.  If your using Trucker within Laravel, you just need to run the following command to publish the Trucker config files to the **app/config/packages/alexmanno/trucker** folder.
 
 ````
-php artisan config:publish indatus/trucker
+php artisan config:publish alexmanno/trucker
 ````
 
 The final step is to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
@@ -112,7 +112,7 @@ Now you should be ready to go.
 If your using Trucker outside Laravel you just need to create the `.trucker` folder in your project root and copy the package's config files there.  Here's the *nix command for that.
 
 ````
-mkdir .trucker && cp vendor/indatus/trucker/src/config/* .trucker/
+mkdir .trucker && cp vendor/alexmanno/trucker/src/config/* .trucker/
 ````
 
 <a name="config"/>
