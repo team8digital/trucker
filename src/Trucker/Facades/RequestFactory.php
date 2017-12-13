@@ -8,7 +8,7 @@ use Trucker\TruckerServiceProvider;
 /**
  * Facade class for interacting with the Requests class.
  *
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class RequestFactory extends Facade
 {

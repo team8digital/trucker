@@ -15,7 +15,7 @@ use Trucker\Responses\Collection;
 /**
  * Class for finding collections of models over the remote API.
  *
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class CollectionFinder
 {

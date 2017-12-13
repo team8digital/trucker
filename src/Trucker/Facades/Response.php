@@ -8,7 +8,7 @@ use Trucker\TruckerServiceProvider;
 /**
  * Facade class for interacting with the Trucker Request Manager class.
  *
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class Response extends Facade
 {

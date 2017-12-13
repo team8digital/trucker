@@ -17,7 +17,7 @@ use Trucker\Finders\Conditions\QueryResultOrderInterface;
 /**
  * Base class for interacting with a remote API.
  *
- * @author Brian Webb <bwebb@indatus.com>
+ * @author Alessandro Manno <alessandromanno96@gmail.com>
  */
 class Model
 {
