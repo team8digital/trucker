@@ -77,15 +77,15 @@ $results = Product::all(); //find a collection
 
 ### Install With Composer
 
-You can install the library via [Composer](http://getcomposer.org) by adding the following line to the **require** block of your *composer.json* file:
+You can install the library via [Composer](http://getcomposer.org):
 
 ````
-"alexmanno/trucker": "dev-master"
+composer require alexmanno/trucker
 ````
 
 > For Laravel 5 support, see the [`laravel-5` branch](https://github.com/alexmanno/trucker/tree/laravel-5#config-laravel)
 
-Next run `composer install`, now you need to publish the config files.
+Now you need to publish the config files.
 
 Trucker's config files are where you'd define constant things about the API your interacting with, like the end-point, what drivers you want to use etc.
 
