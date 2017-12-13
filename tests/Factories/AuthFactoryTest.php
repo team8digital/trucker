@@ -1,40 +1,39 @@
 <?php
 
+namespace Trucker\Tests\Factories;
+
 use Trucker\Facades\AuthFactory;
 use Trucker\Facades\Config;
+use Trucker\Tests\TruckerTestCase;
 
-class AuthFactoryTest extends TruckerTests
+class AuthFactoryTest extends TruckerTestCase
 {
-
-
     public function testCreateValidAuthenticator()
     {
         $this->swapConfig([
-            'trucker::auth.driver' => 'basic'
+            'trucker::auth.driver' => 'basic',
         ]);
         Config::setApp($this->app);
 
         $json = AuthFactory::build();
-        $this->assertTrue(
-            ($json instanceof \Trucker\Requests\Auth\BasicAuthenticator),
-            "Expected transporter to be Trucker\Requests\Auth\BasicAuthenticator"
+        $this->assertInstanceOf(
+            \Trucker\Requests\Auth\BasicAuthenticator::class, $json, "Expected transporter to be Trucker\Requests\Auth\BasicAuthenticator"
         );
 
-        $this->assertTrue(
-            ($json instanceof \Trucker\Requests\Auth\AuthenticationInterface),
-            "Expected transporter to implement Trucker\Requests\Auth\AuthenticationInterface"
+        $this->assertInstanceOf(
+            \Trucker\Requests\Auth\AuthenticationInterface::class, $json, "Expected transporter to implement Trucker\Requests\Auth\AuthenticationInterface"
         );
     }
 
     public function testCreateInvalidTransporter()
     {
         $this->swapConfig([
-            'trucker::auth.driver' => 'invalid'
+            'trucker::auth.driver' => 'invalid',
         ]);
         Config::setApp($this->app);
 
-        $this->setExpectedException('ReflectionException');
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('ReflectionException');
+        $this->expectException('InvalidArgumentException');
         $foo = AuthFactory::build();
     }
 }

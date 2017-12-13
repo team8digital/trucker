@@ -1,11 +1,13 @@
 <?php
 
-use Trucker\Facades\ErrorHandlerFactory;
+namespace Trucker\Tests\Factories;
+
 use Trucker\Facades\Config;
+use Trucker\Facades\ErrorHandlerFactory;
+use Trucker\Tests\TruckerTestCase;
 
-class ErrorHandlerFactoryTest extends TruckerTests
+class ErrorHandlerFactoryTest extends TruckerTestCase
 {
-
     public function tearDown()
     {
         parent::tearDown();
@@ -16,31 +18,29 @@ class ErrorHandlerFactoryTest extends TruckerTests
     public function testCreateValidErrorHandler()
     {
         $this->swapConfig([
-            'trucker::error_handler.driver' => 'array_response'
+            'trucker::error_handler.driver' => 'array_response',
         ]);
         Config::setApp($this->app);
 
         $json = ErrorHandlerFactory::build();
-        $this->assertTrue(
-            ($json instanceof \Trucker\Responses\ErrorHandlers\ArrayResponseErrorHandler),
-            "Expected transporter to be Trucker\Responses\ErrorHandlers\ArrayResponseErrorHandler"
+        $this->assertInstanceOf(
+            \Trucker\Responses\ErrorHandlers\ArrayResponseErrorHandler::class, $json, "Expected transporter to be Trucker\Responses\ErrorHandlers\ArrayResponseErrorHandler"
         );
 
-        $this->assertTrue(
-            ($json instanceof \Trucker\Responses\ErrorHandlers\ErrorHandlerInterface),
-            "Expected transporter to implement Trucker\Responses\ErrorHandlers\ErrorHandlerInterface"
+        $this->assertInstanceOf(
+            \Trucker\Responses\ErrorHandlers\ErrorHandlerInterface::class, $json, "Expected transporter to implement Trucker\Responses\ErrorHandlers\ErrorHandlerInterface"
         );
     }
 
     public function testCreateInvalidTransporter()
     {
         $this->swapConfig([
-            'trucker::error_handler.driver' => 'invalid'
+            'trucker::error_handler.driver' => 'invalid',
         ]);
         Config::setApp($this->app);
 
-        $this->setExpectedException('ReflectionException');
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('ReflectionException');
+        $this->expectException('InvalidArgumentException');
         $foo = ErrorHandlerFactory::build();
     }
 }

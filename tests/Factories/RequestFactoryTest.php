@@ -1,40 +1,39 @@
 <?php
 
-use Trucker\Facades\RequestFactory;
+namespace Trucker\Tests\Factories;
+
 use Trucker\Facades\Config;
+use Trucker\Facades\RequestFactory;
+use Trucker\Tests\TruckerTestCase;
 
-class RequestFactoryTest extends TruckerTests
+class RequestFactoryTest extends TruckerTestCase
 {
-
-
     public function testCreateValidRequest()
     {
         $this->swapConfig([
-            'trucker::request.driver' => 'rest'
+            'trucker::request.driver' => 'rest',
         ]);
         Config::setApp($this->app);
 
         $request = RequestFactory::build();
-        $this->assertTrue(
-            ($request instanceof \Trucker\Requests\RestRequest),
-            "Expected transporter to be Trucker\Requests\RestRequest"
+        $this->assertInstanceOf(
+            \Trucker\Requests\RestRequest::class, $request, "Expected transporter to be Trucker\Requests\RestRequest"
         );
 
-        $this->assertTrue(
-            ($request instanceof \Trucker\Requests\RequestableInterface),
-            "Expected transporter to implement Trucker\Requests\RequestableInterface"
+        $this->assertInstanceOf(
+            \Trucker\Requests\RequestableInterface::class, $request, "Expected transporter to implement Trucker\Requests\RequestableInterface"
         );
     }
 
     public function testCreateInvalidRequest()
     {
         $this->swapConfig([
-            'trucker::request.driver' => 'invalid'
+            'trucker::request.driver' => 'invalid',
         ]);
         Config::setApp($this->app);
 
-        $this->setExpectedException('ReflectionException');
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('ReflectionException');
+        $this->expectException('InvalidArgumentException');
         $foo = RequestFactory::build();
     }
 }

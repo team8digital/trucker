@@ -1,100 +1,96 @@
 <?php
 
-/**
- * This file is part of Trucker
- *
- * (c) Brian Webb <bwebb@indatus.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 namespace Trucker\Requests;
 
-use Illuminate\Container\Container;
+use Guzzle\Common\Event;
 use Guzzle\Http\Client;
-use Trucker\Facades\TransporterFactory;
-use Trucker\Facades\ResponseInterpreterFactory;
-use Trucker\Facades\ErrorHandlerFactory;
+use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Message\Request;
+use Illuminate\Container\Container;
 use Trucker\Facades\Config;
-use Trucker\Responses\RawResponse;
+use Trucker\Facades\ErrorHandlerFactory;
+use Trucker\Facades\ResponseInterpreterFactory;
+use Trucker\Facades\TransporterFactory;
 use Trucker\Finders\Conditions\QueryConditionInterface;
 use Trucker\Finders\Conditions\QueryResultOrderInterface;
 use Trucker\Requests\Auth\AuthenticationInterface;
 use Trucker\Resource\Model;
+use Trucker\Responses\RawResponse;
 
 class RestRequest implements RequestableInterface
 {
-
     /**
-     * The IoC Container
+     * The IoC Container.
      *
-     * @var \Illuminate\Container\Container
+     * @var Container
      */
     protected $app;
 
     /**
-     * Request client 
-     * 
+     * Request client.
+     *
      * @var \Guzzle\Http\Client
      */
     protected $client;
 
     /**
      * Request object managed by this
-     * class
+     * class.
      *
-     * @var \Guzzle\Http\Message\Request
+     * @var Request
      */
     protected $request;
 
-
     /**
-     * Build a new RestRequest
+     * Build a new RestRequest.
      *
      * @param Container $app
      * @param Client    $client
+     *
+     * @throws \Guzzle\Common\Exception\RuntimeException
      */
     public function __construct(Container $app, $client = null)
     {
         $this->app = $app;
-        $this->client = $client == null ? new Client : $client;
+        $this->client = null == $client ? new Client() : $client;
     }
 
-
     /**
-     * Getter function to access the HTTP Client
-     * 
-     * @return \Guzzle\Http\Client
+     * Getter function to access the HTTP Client.
+     *
+     * @return Client
      */
-    public function &getClient()
+    public function getClient()
     {
         return $this->client;
     }
 
-
     /**
-     * Function to create a Guzzle HTTP request
+     * Function to create a Guzzle HTTP request.
      *
-     * @param  string $baseUri         The protocol + host
-     * @param  string $path            The URI path after the host
-     * @param  string $httpMethod      The HTTP method to use for the request (GET, PUT, POST, DELTE etc.)
-     * @param  array  $requestHeaders  Any additional headers for the request
-     * @param  string $httpMethodParam Post parameter to set with a string that
-     *                                 contains the HTTP method type sent with a POST
-     * @return RequestManager
+     * @param string $baseUri         The protocol + host
+     * @param string $path            The URI path after the host
+     * @param string $httpMethod      The HTTP method to use for the request (GET, PUT, POST, DELTE etc.)
+     * @param array  $requestHeaders  Any additional headers for the request
+     * @param string $httpMethodParam Post parameter to set with a string that
+     *                                contains the HTTP method type sent with a POST
+     *
+     * @return Request
+     *
+     * @throws \Exception
      */
-    public function createRequest($baseUri, $path, $httpMethod = 'GET', $requestHeaders = array(), $httpMethodParam = null)
+    public function createRequest($baseUri, $path, $httpMethod = 'GET', array $requestHeaders = [], $httpMethodParam = null)
     {
         $this->client->setBaseUrl($baseUri);
 
-        if (!in_array(strtolower($httpMethod), array('get', 'put', 'post', 'patch', 'delete', 'head'))) {
-            throw new Exception("Invalid HTTP method");
+        if (!in_array(strtolower($httpMethod), ['get', 'put', 'post', 'patch', 'delete', 'head'], true)) {
+            throw new \Exception('Invalid HTTP method');
         }
 
         $method = strtolower($httpMethod);
-        $method = $method == 'patch' ? 'put' : $method; //override patch calls with put
+        $method = 'patch' === $method ? 'put' : $method; //override patch calls with put
 
-        if ($httpMethodParam != null && in_array($method, array('put', 'post', 'patch', 'delete'))) {
+        if (null != $httpMethodParam && in_array($method, ['put', 'post', 'patch', 'delete'], true)) {
             $this->request = $this->client->post($path);
             $this->request->setPostField($httpMethodParam, strtoupper($method));
         } else {
@@ -110,55 +106,50 @@ class RestRequest implements RequestableInterface
         return $this->request;
     }
 
-
     /**
-     * Function to set headers on the request
+     * Function to set headers on the request.
      *
-     * @param  array  $requestHeaders  Any additional headers for the request
-     * @return  void
+     * @param array $requestHeaders Any additional headers for the request
      */
-    public function setHeaders($requestHeaders = array())
+    public function setHeaders(array $requestHeaders = [])
     {
         foreach ($requestHeaders as $header => $value) {
             $this->request->setHeader($header, $value);
         }
     }
 
-
     /**
      * Function to set given file parameters
-     * on the request
+     * on the request.
      *
      * @param array $params File parameters to set
      */
     public function setBody($body, $contentType = null)
     {
-        if(method_exists($this->request, 'setBody')){
+        if (method_exists($this->request, 'setBody')) {
             $this->request->setBody($body, $contentType);
         }
     }
 
-
     /**
-     * Function to set POST parameters onto the request
+     * Function to set POST parameters onto the request.
      *
      * @param array $params Key value array of post params
      */
-    public function setPostParameters($params = array())
+    public function setPostParameters(array $params = [])
     {
         foreach ($params as $key => $value) {
             $this->request->setPostField($key, $value);
         }
     }
 
-
     /**
      * Functio to set GET parameters onto the
-     * request
+     * request.
      *
      * @param array $params Key value array of get params
      */
-    public function setGetParameters($params = array())
+    public function setGetParameters(array $params = [])
     {
         $query = $this->request->getQuery();
         foreach ($params as $key => $val) {
@@ -166,20 +157,18 @@ class RestRequest implements RequestableInterface
         }
     }
 
-
     /**
      * Function to set given file parameters
-     * on the request
+     * on the request.
      *
      * @param array $params File parameters to set
      */
-    public function setFileParameters($params = array())
+    public function setFileParameters(array $params = [])
     {
         foreach ($params as $key => $value) {
             $this->request->addPostFile($key, $value);
         }
     }
-
 
     /**
      * Function to set the entities properties on the
@@ -194,10 +183,10 @@ class RestRequest implements RequestableInterface
 
         //set the property attributes
         foreach ($model->attributes() as $key => $value) {
-            if (in_array($key, $model->getFileFields())) {
+            if (in_array($key, $model->getFileFields(), true)) {
                 $this->request->addPostFile($key, $value);
             } else {
-                if (!in_array($key, $cantSet)) {
+                if (!in_array($key, $cantSet, true)) {
                     $this->request->setPostField($key, $value);
                 }
             }
@@ -207,9 +196,7 @@ class RestRequest implements RequestableInterface
     /**
      * Function to set the language of data transport. Uses
      * TransporterFactory to pull a Transportable object
-     * and set up the request
-     *
-     * @return  void
+     * and set up the request.
      */
     public function setTransportLanguage()
     {
@@ -217,22 +204,20 @@ class RestRequest implements RequestableInterface
         $transporter->setHeaderOnRequest($this->request);
     }
 
-
     /**
-     * Function to add an error handler to the request.  This could be used
+     * Function to add an error handler to the request.  This could be used.
      *
-     * @param int     $httpStatus      HTTP status to error handle (-1 matches all)
-     * @param Closure $func            Function to call on error
-     * @param boolean $stopPropagation Boolean as to wether to stop event propagation
+     * @param int      $httpStatus      HTTP status to error handle (-1 matches all)
+     * @param \Closure $func            Function to call on error
+     * @param bool     $stopPropagation Boolean as to wether to stop event propagation
      */
     public function addErrorHandler($httpStatus, \Closure $func, $stopPropagation = true)
     {
         $request = $this->request;
         $this->request->getEventDispatcher()->addListener(
             'request.error',
-            function (\Guzzle\Common\Event $event) use ($httpStatus, $stopPropagation, $func, $request) {
+            function (Event $event) use ($httpStatus, $stopPropagation, $func, $request) {
                 if ($httpStatus == -1 || $event['response']->getStatusCode() == $httpStatus) {
-
                     // Stop other events from firing if needed
                     if ($stopPropagation) {
                         $event->stopPropagation();
@@ -245,152 +230,144 @@ class RestRequest implements RequestableInterface
         );
     }
 
-
     /**
-     * Function to add Query conditions to the request
+     * Function to add Query conditions to the request.
      *
      * @param QueryConditionInterface $condition condition to add to the request
-     * @return  void
      */
     public function addQueryCondition(QueryConditionInterface $condition)
     {
         $condition->addToRequest($this->request);
     }
 
-
     /**
-     * Function to add Query result ordering conditions to the request
+     * Function to add Query result ordering conditions to the request.
      *
-     * @param  QueryResultOrderInterface $resultOrder
-     * @return void
+     * @param QueryResultOrderInterface $resultOrder
      */
     public function addQueryResultOrder(QueryResultOrderInterface $resultOrder)
     {
         $resultOrder->addToRequest($this->request);
     }
 
-
-
     /**
-     * Function to add authentication to the request
+     * Function to add authentication to the request.
      *
-     * @param  AuthenticationInterface $auth
-     * @return void
+     * @param AuthenticationInterface $auth
      */
     public function authenticate(AuthenticationInterface $auth)
     {
         $auth->authenticateRequest($this->request);
     }
 
-
     /**
-     * Function to send the request to the remote API
+     * Function to send the request to the remote API.
      *
-     * @return  \Trucker\Responses\Response
+     * @return \Trucker\Responses\Response
      */
     public function sendRequest()
     {
         try {
             $response = $this->request->send();
-        } catch (\Guzzle\Http\Exception\BadResponseException $e) {
+        } catch (BadResponseException $e) {
             $response = $e->getResponse();
         }
 
         return $this->app->make('trucker.response')->newInstance($this->app, $response);
     }
 
-
     /**
-     * Function to execute a raw GET request
+     * Function to execute a raw GET request.
      *
-     * @param  string $uri       uri to hit (i.e. /users)
-     * @param  array  $params    Querystring parameters to send
-     * @param  array  $headers   Optional headers to use
+     * @param string $uri     uri to hit (i.e. /users)
+     * @param array  $params  Querystring parameters to send
+     * @param array  $headers Optional headers to use
+     *
      * @return \Trucker\Responses\RawResponse
      */
-    public function rawGet($uri, $params = array(), $headers = array())
+    public function rawGet($uri, array $params = [], array $headers = [])
     {
-        return $this->rawRequest($uri, 'GET', array(), $params, array(), $headers);
+        return $this->rawRequest($uri, 'GET', [], $params, [], $headers);
     }
 
-
     /**
-     * Function to execute a raw POST request
+     * Function to execute a raw POST request.
      *
-     * @param  string $uri       uri to hit (i.e. /users)
-     * @param  array  $params    POST parameters to send
-     * @param  array  $getParams Querystring parameters to send
-     * @param  array  $files     files to send (key = name, value = path)
-     * @param  array  $headers   Optional headers to use
+     * @param string $uri       uri to hit (i.e. /users)
+     * @param array  $params    POST parameters to send
+     * @param array  $getParams Querystring parameters to send
+     * @param array  $files     files to send (key = name, value = path)
+     * @param array  $headers   Optional headers to use
+     *
      * @return \Trucker\Responses\RawResponse
      */
-    public function rawPost($uri, $params = array(), $getParams = array(), $files = array(), $headers = array())
+    public function rawPost($uri, array $params = [], array $getParams = [], array $files = [], array $headers = [])
     {
         return $this->rawRequest($uri, 'POST', $params, $getParams, $files, $headers);
     }
 
-
     /**
-     * Function to execute a raw PUT request
+     * Function to execute a raw PUT request.
      *
-     * @param  string $uri       uri to hit (i.e. /users)
-     * @param  array  $params    PUT parameters to send
-     * @param  array  $getParams Querystring parameters to send
-     * @param  array  $files     files to send (key = name, value = path)
-     * @param  array  $headers   Optional headers to use
+     * @param string $uri       uri to hit (i.e. /users)
+     * @param array  $params    PUT parameters to send
+     * @param array  $getParams Querystring parameters to send
+     * @param array  $files     files to send (key = name, value = path)
+     * @param array  $headers   Optional headers to use
+     *
      * @return \Trucker\Responses\RawResponse
      */
-    public function rawPut($uri, $params = array(), $getParams = array(), $files = array(), $headers = array())
+    public function rawPut($uri, array $params = [], array $getParams = [], array $files = [], array $headers = [])
     {
         return $this->rawRequest($uri, 'PUT', $params, $getParams, $files, $headers);
     }
 
-
     /**
-     * Function to execute a raw PATCH request
+     * Function to execute a raw PATCH request.
      *
-     * @param  string $uri       uri to hit (i.e. /users)
-     * @param  array  $params    PATCH parameters to send
-     * @param  array  $getParams Querystring parameters to send
-     * @param  array  $files     files to send (key = name, value = path)
-     * @param  array  $headers   Optional headers to use
+     * @param string $uri       uri to hit (i.e. /users)
+     * @param array  $params    PATCH parameters to send
+     * @param array  $getParams Querystring parameters to send
+     * @param array  $files     files to send (key = name, value = path)
+     * @param array  $headers   Optional headers to use
+     *
      * @return \Trucker\Responses\RawResponse
      */
-    public function rawPatch($uri, $params = array(), $getParams = array(), $files = array(), $headers = array())
+    public function rawPatch($uri, array $params = [], array $getParams = [], array $files = [], array $headers = [])
     {
         return $this->rawRequest($uri, 'PATCH', $params, $getParams, $files, $headers);
     }
 
-
     /**
-     * Function to execute a raw DELETE request
+     * Function to execute a raw DELETE request.
      *
-     * @param  string $uri       uri to hit (i.e. /users)
-     * @param  array  $params    Querystring parameters to send
-     * @param  array  $headers   Optional headers to use
+     * @param string $uri     uri to hit (i.e. /users)
+     * @param array  $params  Querystring parameters to send
+     * @param array  $headers Optional headers to use
+     *
      * @return \Trucker\Responses\RawResponse
      */
-    public function rawDelete($uri, $params = array(), $headers = array())
+    public function rawDelete($uri, array $params = [], array $headers = [])
     {
-        return $this->rawRequest($uri, 'DELETE', array(), $params, array(), $headers);
+        return $this->rawRequest($uri, 'DELETE', [], $params, [], $headers);
     }
-
 
     /**
      * Function to execute a raw request on the base URI with the given uri path
-     * and params
+     * and params.
      *
-     * @param  string $uri       uri to hit (i.e. /users)
-     * @param  string $method    Request method (GET, PUT, POST, PATCH, DELETE, etc.)
-     * @param  array  $params    PUT or POST parameters to send
-     * @param  array  $getParams Querystring parameters to send
-     * @param  array  $files     PUT or POST files to send (key = name, value = path)
-     * @param  array  $headers   Optional headers to use
+     * @param string $uri       uri to hit (i.e. /users)
+     * @param string $method    Request method (GET, PUT, POST, PATCH, DELETE, etc.)
+     * @param array  $params    PUT or POST parameters to send
+     * @param array  $getParams Querystring parameters to send
+     * @param array  $files     PUT or POST files to send (key = name, value = path)
+     * @param array  $headers   Optional headers to use
+     *
      * @return \Trucker\Responses\RawResponse
      */
-    public function rawRequest($uri, $method, $params = array(), $getParams = array(), $files = array(), $headers = array())
+    public function rawRequest($uri, $method, array $params = [], array $getParams = [], array $files = [], array $headers = [])
     {
-        $this->request = self::createRequest(
+        $this->request = $this->createRequest(
             Config::get('request.base_uri'),
             $uri,
             $method
@@ -411,15 +388,14 @@ class RestRequest implements RequestableInterface
 
         //handle clean response with errors
         if (ResponseInterpreterFactory::build()->invalid($response)) {
-
             //get the errors and set them to our local collection
             $errors = (array) ErrorHandlerFactory::build()->parseErrors($response);
 
             return new RawResponse(false, $response, $errors);
-     
         }//end if
 
         return new RawResponse(true, $response);
+    }
 
-    }//end rawRequest
+    //end rawRequest
 }

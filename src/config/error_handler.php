@@ -1,5 +1,6 @@
-<?php return array(
+<?php
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Error Handler Driver
@@ -19,7 +20,7 @@
     |                 error messages contained therein.
     |
     */
-   
+
    'driver' => 'array_response',
 
    /*
@@ -33,5 +34,4 @@
     */
 
     'errors_key' => null,
-
-);
+];

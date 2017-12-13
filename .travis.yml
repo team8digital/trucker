@@ -1,16 +1,19 @@
 language: php
+dist: trusty
+sudo: false
 
-php: 
-  - 5.4
-  - 5.5
+cache:
+  directories:
+    - $HOME/.composer/cache/files
 
-before_script:
- - wget http://getcomposer.org/composer.phar
- - php composer.phar install --dev --no-interaction  
+php:
+  - 7.0
+  - 7.1
+  - 7.2
 
-script:
- - mkdir -p build/logs
- - phpunit --coverage-clover build/logs/clover.xml
+install: composer install
 
-after_script:
- - php vendor/bin/coveralls -v
+script: vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
+
+after_success:
+  - wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml

@@ -1,59 +1,49 @@
 <?php
 
-/**
- * This file is part of Trucker
- *
- * (c) Brian Webb <bwebb@indatus.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 namespace Trucker\Finders;
 
 use Illuminate\Container\Container;
-use Trucker\Facades\RequestFactory;
-use Trucker\Facades\UrlGenerator;
-use Trucker\Facades\Config;
 use Trucker\Facades\AuthFactory;
+use Trucker\Facades\Config;
+use Trucker\Facades\RequestFactory;
 use Trucker\Facades\ResponseInterpreterFactory;
+use Trucker\Facades\UrlGenerator;
+use Trucker\Resource\Model;
 
 /**
- * Class for finding model instances over the remote API
+ * Class for finding model instances over the remote API.
  *
  * @author Brian Webb <bwebb@indatus.com>
  */
 class InstanceFinder
 {
-
     /**
-     * The IoC Container
+     * The IoC Container.
      *
-     * @var Illuminate\Container\Container
+     * @var Container
      */
     protected $app;
 
-
     /**
-     * Build a new InstanceFinder
+     * Build a new InstanceFinder.
      *
      * @param Container $app
-     * @param Client    $client
      */
     public function __construct(Container $app)
     {
         $this->app = $app;
     }
 
-
     /**
-     * Function to find an instance of an Entity record
+     * Function to find an instance of an Entity record.
      *
-     * @param  Trucker\Resource\Model $model       Model to use for URL generation etc.
-     * @param  int           $id          The primary identifier value for the record
-     * @param  array         $getParams   Array of GET parameters to pass
-     * @return Trucker\Resource\Model              An instance of the entity requested
+     * @param Model $model     model to use for URL generation etc
+     * @param int   $id        The primary identifier value for the record
+     * @param array $getParams Array of GET parameters to pass
+     *
+     * @return Model An instance of the entity requested
      */
-    public function fetch($model, $id, $getParams = array())
+    public function fetch($model, $id, array $getParams = [])
     {
         $instance = null;
 
@@ -78,14 +68,12 @@ class InstanceFinder
         //actually send the request
         $response = $request->sendRequest();
 
-
-        
-        if (! ResponseInterpreterFactory::build()->success($response)) {
+        if (!ResponseInterpreterFactory::build()->success($response)) {
             return null;
         }
 
         //kraft the response into an object to return
-        $data     = $response->parseResponseToData();
+        $data = $response->parseResponseToData();
         $instance = new $model($data);
 
         //inflate the ID property that should be guarded

@@ -1,23 +1,16 @@
 <?php
 
-/**
- * This file is part of Trucker
- *
- * (c) Brian Webb <bwebb@indatus.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 namespace Trucker\Finders\Conditions;
 
+use Guzzle\Http\Message\Request;
 use Illuminate\Container\Container;
 use Trucker\Facades\Config;
 
 /**
  * Class to manage query conditions for a request, where the
- * query conditions are passed as HTTP GET array parameters which are 
+ * query conditions are passed as HTTP GET array parameters which are
  * nested within a particular parameter name (defined in the config).
- * The resulting GET params might be something like:
+ * The resulting GET params might be something like:.
  *
  * <code>
  * search[0][property]=someProperty
@@ -31,12 +24,11 @@ use Trucker\Facades\Config;
  */
 class GetArrayParamsQueryCondition implements QueryConditionInterface
 {
-
     /**
      * Constant to referr to array
      * entries that contain a property
      * or attribute to which a condition should
-     * be applied
+     * be applied.
      */
     const PROPERTY = 'property';
 
@@ -44,7 +36,7 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
      * Constant to referr to array
      * entries that contain the operator
      * that a value should be matched against
-     * on a property
+     * on a property.
      */
     const OPERATOR = 'operator';
 
@@ -52,37 +44,36 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
      * Constant to referr to array
      * entries that contain a value that
      * should be used in a conditional match
-     * against a property
+     * against a property.
      */
     const VALUE = 'value';
 
     /**
-     * The IoC Container
+     * The IoC Container.
      *
-     * @var Illuminate\Container\Container
+     * @var Container
      */
     protected $app;
 
     /**
      * Collection of conditions, each condition
      * will be a 3 key array having an entry for
-     * property, operator and value
-     * 
+     * property, operator and value.
+     *
      * @var array
      */
     protected $conditions = [];
 
     /**
      * The logical operator that should be used
-     * to group the conditions herein together
-     * 
+     * to group the conditions herein together.
+     *
      * @var string
      */
     protected $logicalOperator;
 
-
     /**
-     * Build a new GetArrayParamsQueryCondition
+     * Build a new GetArrayParamsQueryCondition.
      *
      * @param Container $app
      */
@@ -91,45 +82,41 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
         $this->app = $app;
     }
 
-
     /**
      * Function to return a new popuplated instance,
      * typically this would be called from the Facade.
-     * 
-     * @return Trucker\Finders\Conditions\GetArrayParamsQueryCondition
+     *
+     * @return GetArrayParamsQueryCondition
      */
     public function newInstance()
     {
-        $instance = new static($this->app);
-        return $instance;
+        return new static($this->app);
     }
 
-
     /**
-     * Function to add a query condition 
-     * 
+     * Function to add a query condition.
+     *
      * @param string $property The field the condition operates on
      * @param string $operator The operator (=, <, >, <= and so on)
      * @param string $value    The value the condition should match
-     * @return  void
      */
     public function addCondition($property, $operator, $value)
     {
         $this->conditions[] = [
             self::PROPERTY => $property,
             self::OPERATOR => $operator,
-            self::VALUE    => $value
+            self::VALUE => $value,
         ];
     }
 
-
     /**
-     * Function to set the logical operator for the 
-     * combination of any conditions that have been passed to the 
-     * addCondition() function
-     * 
+     * Function to set the logical operator for the
+     * combination of any conditions that have been passed to the
+     * addCondition() function.
+     *
      * @param string $operator
-     * @return  void
+     *
+     * @throws \InvalidArgumentException
      */
     public function setLogicalOperator($operator)
     {
@@ -142,11 +129,10 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
         $this->logicalOperator = $operator;
     }
 
-
     /**
      * Function to get the string representing
-     * the AND logical operator
-     * 
+     * the AND logical operator.
+     *
      * @return string
      */
     public function getLogicalOperatorAnd()
@@ -154,11 +140,10 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
         return Config::get('query_condition.get_array_params.and_operator');
     }
 
-
     /**
      * Function to get the string representing
-     * the OR logical operator
-     * 
+     * the OR logical operator.
+     *
      * @return string
      */
     public function getLogicalOperatorOr()
@@ -166,26 +151,23 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
         return Config::get('query_condition.get_array_params.or_operator');
     }
 
-
     /**
      * Function to add all the conditions that have been
-     * given to the class to a given request object
-     * 
-     * @param Guzzle\Http\Message\Request $request Request passed by reference
-     * @return  void
+     * given to the class to a given request object.
+     *
+     * @param Request $request Request passed by reference
      */
-    public function addToRequest(&$request)
+    public function addToRequest(Request $request)
     {
-        $query     = $request->getQuery();
-        
+        $query = $request->getQuery();
+
         $conatiner = Config::get('query_condition.get_array_params.container_parameter');
-        $property  = Config::get('query_condition.get_array_params.property');
-        $operator  = Config::get('query_condition.get_array_params.operator');
-        $value     = Config::get('query_condition.get_array_params.value');
+        $property = Config::get('query_condition.get_array_params.property');
+        $operator = Config::get('query_condition.get_array_params.operator');
+        $value = Config::get('query_condition.get_array_params.value');
 
         $x = 0;
         foreach ($this->conditions as $condition) {
-
             $query->add(
                 "{$conatiner}[$x][{$property}]",
                 $condition[self::PROPERTY]
@@ -199,8 +181,7 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
                 $condition[self::VALUE]
             );
 
-            $x++;
-
+            ++$x;
         }//end foreach $findConditions
 
         if (isset($this->logicalOperator)) {
@@ -211,33 +192,29 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
         }
     }
 
-
     /**
      * Function to convert the conditions and
      * logical operator represented in this class
-     * to an array, this is useful for testing
-     * 
+     * to an array, this is useful for testing.
+     *
      * @return array
      */
     public function toArray()
     {
-
         $conatiner = Config::get('query_condition.get_array_params.container_parameter');
-        $property  = Config::get('query_condition.get_array_params.property');
-        $operator  = Config::get('query_condition.get_array_params.operator');
-        $value     = Config::get('query_condition.get_array_params.value');
+        $property = Config::get('query_condition.get_array_params.property');
+        $operator = Config::get('query_condition.get_array_params.operator');
+        $value = Config::get('query_condition.get_array_params.value');
 
         $params = [];
 
         $x = 0;
         foreach ($this->conditions as $condition) {
-
             $params["{$conatiner}[$x][{$property}]"] = $condition[self::PROPERTY];
             $params["{$conatiner}[$x][{$operator}]"] = $condition[self::OPERATOR];
             $params["{$conatiner}[$x][{$value}]"] = $condition[self::VALUE];
 
-            $x++;
-
+            ++$x;
         }//end foreach $findConditions
 
         if (isset($this->logicalOperator)) {
@@ -247,12 +224,11 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
         return $params;
     }
 
-
     /**
      * Function to convert the conditions and logical operator
      * represented in this class to a querystring, this is useful
-     * for testing
-     * 
+     * for testing.
+     *
      * @return string
      */
     public function toQueryString()

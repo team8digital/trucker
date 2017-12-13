@@ -1,5 +1,6 @@
-<?php return array(
+<?php
 
+return [
     /*
     |--------------------------------------------------------------------------
     | API endpoint URI
@@ -27,7 +28,7 @@
     |        Optional usage of the http_method_param config option can also be used.
     |
     */
-   
+
    'driver' => 'rest',
 
    /*
@@ -46,5 +47,4 @@
     */
 
     'http_method_param' => null,
-
-);
+];

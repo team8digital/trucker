@@ -1,5 +1,6 @@
-<?php return array(
+<?php
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Authentication Driver
@@ -10,7 +11,7 @@
     |
     | Supported Options: basic
     |
-    | basic - This driver will use HTTP Basic Authentication, and set the 
+    | basic - This driver will use HTTP Basic Authentication, and set the
     |         `auth.basic.username` and `auth.basic.password` config values
     |         on the request.
     |
@@ -24,5 +25,4 @@
         'username' => '{basic_username}',
         'password' => '{basic_password}',
     ],
-
-);
+];

@@ -1,16 +1,19 @@
 <?php
 
+namespace Trucker\Tests\Requests;
+
+use Illuminate\Container\Container;
 use Trucker\Facades\UrlGenerator;
-use Trucker\Facades\Trucker;
-use Mockery as m;
+use Trucker\Tests\Stubs\User;
+use Trucker\Tests\Stubs\UserPreferenceSetting;
+use Trucker\Tests\TruckerTestCase;
 
-class UrlGeneratorTest extends TruckerTests
+class UrlGeneratorTest extends TruckerTestCase
 {
-
     public function testResourceNaming()
     {
         //test resource name w/ reflection & inflection
-        $x = new User;
+        $x = new User();
         $this->assertEquals('User', $x->getResourceName());
 
         //test custom resource name
@@ -18,12 +21,10 @@ class UrlGeneratorTest extends TruckerTests
         $this->assertEquals('Person', $x->getResourceName());
     }
 
-
-
     public function testGetUri()
     {
         //test custom uri setting
-        $x = new User;
+        $x = new User();
         $this->simulateSetInaccessableProperty($x, 'uri', '/some_other_uri');
         $this->assertEquals(
             '/some_other_uri',
@@ -31,24 +32,21 @@ class UrlGeneratorTest extends TruckerTests
         );
 
         //test multi-word class / uri
-        $y = new UserPreferenceSetting;
+        $y = new UserPreferenceSetting();
         $this->assertEquals(
             '/user_preference_settings',
             UrlGenerator::getURI($y)
         );
     }
 
-
-
     public function testGetCollectionUri()
     {
         //test collection URI w/ inflection
-        $x = new User;
+        $x = new User();
         $this->assertEquals(
             '/users',
             UrlGenerator::getCollectionUri($x)
         );
-
 
         //test collection URI w/ custom resource name
         $this->simulateSetInaccessableProperty($x, 'resourceName', 'Person');
@@ -65,11 +63,10 @@ class UrlGeneratorTest extends TruckerTests
         );
     }
 
-
     public function testGetCollectionUriNestedOnce()
     {
         //test nestedUnder
-        $x = new User;
+        $x = new User();
         $x->nestedUnder = 'Company:100';
         $this->assertEquals(
             '/companies/100/users',
@@ -77,10 +74,9 @@ class UrlGeneratorTest extends TruckerTests
         );
     }
 
-
     public function testGetCollectionUriMultiNested()
     {
-        $x = new User;
+        $x = new User();
 
         //test multi-nesting with class / id
         $x->nestedUnder = 'Group:999,Company:123';
@@ -97,12 +93,10 @@ class UrlGeneratorTest extends TruckerTests
         );
     }
 
-
-
     public function testInstanceUpdateDeleteURIs()
     {
-        $x = new User;
-        $x->__set('id', 1234);
+        $x = new User();
+        $x->id = 1234;
         $this->assertEquals('/users/:id', UrlGenerator::getInstanceUri($x));
         $this->assertEquals(
             '/users/1234',
@@ -120,11 +114,9 @@ class UrlGeneratorTest extends TruckerTests
         );
     }
 
-
-
     public function testCreateUri()
     {
-        $x = new User;
+        $x = new User();
         $this->assertEquals(
             '/users',
             UrlGenerator::getCreateUri($x)
@@ -133,10 +125,10 @@ class UrlGeneratorTest extends TruckerTests
 
     public function testAppGetter()
     {
-        $app = m::mock('Illuminate\Container\Container');
-        $urlGen = new \Trucker\Url\UrlGenerator($app);
+        $app = $this->prophesize(Container::class);
+        $urlGen = new \Trucker\Url\UrlGenerator($app->reveal());
         $this->assertEquals(
-            $app,
+            $app->reveal(),
             $urlGen->getApp()
         );
     }
