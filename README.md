@@ -31,8 +31,6 @@ $success = $found->destroy(); //destroy an entity
 $results = Product::all(); //find a collection
 ```
 
-> This project is looking for new maintainers.  Please open an issue if interested.
-
 ## README Contents
 
 * [Installation](#install)
