@@ -85,6 +85,7 @@ abstract class TruckerTests extends PHPUnit_Framework_TestCase
             'trucker::auth.basic.username'                               => null,
             'trucker::auth.basic.password'                               => null,
             'trucker::request.http_method_param'                         => null,
+            'trucker::request.language'                                  => null,
             'trucker::resource.scratch_disk_location'                    => '/tmp',
             'trucker::resource.identity_property'                        => 'id',
             'trucker::transporter.driver'                                => 'json',

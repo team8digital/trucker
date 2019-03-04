@@ -60,7 +60,7 @@ class Bootstrapper
     {
         // Return path to Laravel configuration
         if ($this->app->bound('path')) {
-            $laravel = $this->app['path'].'/config/packages/indatus/trucker';
+            $laravel = $this->app['path'].'/config/packages/team8digital/trucker';
             if (file_exists($laravel)) {
                 return $laravel;
             }
