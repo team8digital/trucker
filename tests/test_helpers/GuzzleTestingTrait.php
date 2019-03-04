@@ -23,7 +23,7 @@ trait GuzzleTestingTrait
     public function trackHistory(&$client, $historyLimit = 5)
     {
         //record history for this client
-        $this->history = new \Guzzle\Plugin\History\HistoryPlugin();
+        $this->history = new \GuzzleHttp\Plugin\History\HistoryPlugin();
         $this->history->setLimit($historyLimit);
         $client->addSubscriber($this->history);
     }
@@ -39,7 +39,7 @@ trait GuzzleTestingTrait
      */
     public function mockHttpResponse(&$client, $http_status = 200, $headers = array(), $body = '')
     {
-        $mock = new \Guzzle\Plugin\Mock\MockPlugin();
+        $mock = new \GuzzleHttp\Plugin\Mock\MockPlugin();
         $mock->addResponse(
             new \Guzzle\Http\Message\Response(
                 $http_status,

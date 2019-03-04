@@ -38,13 +38,14 @@ class BasicAuthenticator implements AuthenticationInterface
      * Function to add the necessary authentication
      * to the request
      *
-     * @param Guzzle\Http\Message\Request $request Request passed by reference
+     * @param GuzzleHttp\Message\Request $request Request passed by reference
      * @return  void
      */
     public function authenticateRequest(&$request)
     {
         $username = Config::get('auth.basic.username');
         $password = Config::get('auth.basic.password');
-        $request->setAuth($username, $password);
+        
+        $request->setHeaders(['auth' => [$username, $password]]);
     }
 }

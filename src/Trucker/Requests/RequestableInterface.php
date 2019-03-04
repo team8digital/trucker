@@ -50,5 +50,7 @@ interface RequestableInterface
 
     public function authenticate(AuthenticationInterface $auth);
 
+    public function setLanguage(LanguageInterface $language);
+
     public function sendRequest();
 }

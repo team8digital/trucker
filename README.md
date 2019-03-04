@@ -1,6 +1,9 @@
 # Trucker
 
-[![Latest Stable Version](https://poser.pugx.org/indatus/trucker/v/stable.png)](https://packagist.org/packages/indatus/trucker) [![Total Downloads](https://poser.pugx.org/indatus/trucker/downloads.png)](https://packagist.org/packages/indatus/trucker) [![Build Status](https://travis-ci.org/Indatus/trucker.png?branch=master)](https://travis-ci.org/Indatus/trucker) [![Coverage Status](https://coveralls.io/repos/Indatus/trucker/badge.png?branch=master)](https://coveralls.io/r/Indatus/trucker?branch=master) [![Dependency Status](https://www.versioneye.com/user/projects/530271f4ec1375bab10004bb/badge.png)](https://www.versioneye.com/user/projects/530271f4ec1375bab10004bb)
+[![Latest Stable Version](https://poser.pugx.org/team8digital/trucker/v/stable)](https://packagist.org/packages/team8digital/trucker)
+[![Latest Unstable Version](https://poser.pugx.org/team8digital/trucker/v/unstable)](https://packagist.org/packages/team8digital/trucker)
+[![Total Downloads](https://poser.pugx.org/team8digital/trucker/downloads)](https://packagist.org/packages/team8digital/trucker)
+[![License](https://poser.pugx.org/team8digital/trucker/license)](https://packagist.org/packages/team8digital/trucker)
 
 Trucker is a PHP package for mapping remote API resources (usually RESTful) as models in an ActiveResource style. The benefit is easier use of remote APIs in a fast and clean programming interface.
 
@@ -69,7 +72,7 @@ $results = Product::all(); //find a collection
 You can install the library via [Composer](http://getcomposer.org) by adding the following line to the **require** block of your *composer.json* file:
 
 ````
-"indatus/trucker": "dev-laravel-5"
+"team8digital/trucker": "dev-laravel-5"
 ````
 
 > Note: This project will not be supported for future versions of Laravel.  We do not recommend continuing to implement this package in Laravel projects, unless someone else would like to begin to maintain this project (create an issue if you are).
@@ -81,10 +84,10 @@ Trucker's config files are where you'd define constant things about the API your
 <a name="config-laravel"/>
 ### Configure in Laravel
 
-Trucker works well with the [Laravel](http://laravel.com) framework.  If your using Trucker within Laravel, you just need to run the following command to publish the Trucker config files.
+Trucker works well with the [Laravel](http://laravel.com) framework.  If your using Trucker within Laravel, you just need to run the following command and choose Trucker to publish the Trucker config files.
 
 ````
-php artisan vendor:publish indatus/trucker
+php artisan vendor:publish
 ````
 
 The final step is to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.

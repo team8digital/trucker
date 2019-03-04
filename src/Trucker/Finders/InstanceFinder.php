@@ -70,6 +70,11 @@ class InstanceFinder
             $request->authenticate($auth);
         }
 
+        //add language if it is needed
+        if ($language = LanguageFactory::build()) {
+            $request->setLanguage($language);
+        }
+
         //set any get parameters on the request
         $request->setGetParameters($getParams);
 

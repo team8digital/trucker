@@ -21,7 +21,7 @@ interface TransporterInterface
      * 
      * @param GuzzleHttpMessageRequest $request
      */
-    public function setHeaderOnRequest(\Guzzle\Http\Message\Request &$request);
+    public function setHeaderOnRequest(\GuzzleHttp\Message\Request &$request);
 
     /**
      * Function to convert a response object into an associative
@@ -30,7 +30,7 @@ interface TransporterInterface
      * @param  GuzzleHttpMessageResponse $response
      * @return array
      */
-    public function parseResponseToData(\Guzzle\Http\Message\Response $response);
+    public function parseResponseToData(\GuzzleHttp\Message\Response $response);
 
     /**
      * Function to parse the response string into an object
@@ -39,7 +39,7 @@ interface TransporterInterface
      * @param  GuzzleHttpMessageResponse $response
      * @return stdClass
      */
-    public function parseResponseStringToObject(\Guzzle\Http\Message\Response $response);
+    public function parseResponseStringToObject(\GuzzleHttp\Message\Response $response);
 
     /**
      * Set the request body for the given request.

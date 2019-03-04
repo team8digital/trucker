@@ -543,6 +543,11 @@ class Model
             $request->authenticate($auth);
         }
 
+        //add language if it is needed
+        if ($language = LanguageFactory::build()) {
+            $request->setLanguage($language);
+        }
+
         //set the property attributes on the request
         $request->setModelProperties($this);
 
@@ -601,6 +606,11 @@ class Model
         //add auth if it is needed
         if ($auth = AuthFactory::build()) {
             $request->authenticate($auth);
+        }
+
+        //add language if it is needed
+        if ($language = LanguageFactory::build()) {
+            $request->setLanguage($language);
         }
 
         //actually send the request

@@ -164,7 +164,7 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
      * Function to add all the conditions that have been
      * given to the class to a given request object
      *
-     * @param Guzzle\Http\Message\Request $request Request passed by reference
+     * @param GuzzleHttp\Message\Request $request Request passed by reference
      * @return  void
      */
     public function addToRequest(&$request)

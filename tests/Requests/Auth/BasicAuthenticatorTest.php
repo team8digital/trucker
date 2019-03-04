@@ -16,7 +16,7 @@ class BasicAuthenticatorTest extends TruckerTests
         ]);
         Config::setApp($this->app);
 
-        $request = m::mock('Guzzle\Http\Message\Request');
+        $request = m::mock('GuzzleHttp\Message\Request');
         $request->shouldReceive('setAuth')
             ->with('myUsername', 'myPassword')
             ->once();

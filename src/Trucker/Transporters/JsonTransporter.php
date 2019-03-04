@@ -21,7 +21,7 @@ class JsonTransporter implements TransporterInterface
      *
      * @param GuzzleHttpMessageRequest $request
      */
-    public function setHeaderOnRequest(\Guzzle\Http\Message\Request &$request)
+    public function setHeaderOnRequest(\GuzzleHttp\Message\Request &$request)
     {
         $request->setHeaders([
             'Accept' => 'application/json',
@@ -36,7 +36,7 @@ class JsonTransporter implements TransporterInterface
      * @param  GuzzleHttpMessageResponse $response
      * @return array
      */
-    public function parseResponseToData(\Guzzle\Http\Message\Response $response)
+    public function parseResponseToData(\GuzzleHttp\Message\Response $response)
     {
         return $response->json();
     }
@@ -48,7 +48,7 @@ class JsonTransporter implements TransporterInterface
      * @param  GuzzleHttpMessageResponse $response
      * @return stdClass
      */
-    public function parseResponseStringToObject(\Guzzle\Http\Message\Response $response)
+    public function parseResponseStringToObject(\GuzzleHttp\Message\Response $response)
     {
         return json_decode($response->getBody(true));
     }

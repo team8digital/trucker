@@ -25,17 +25,17 @@
     ],
     "require": {
         "php": ">=7.0",
-        "guzzlehttp/guzzle": "*",
+        "guzzlehttp/guzzle": ">=6",
         "illuminate/support": "*",
-        "illuminate/config": "*",
+        "illuminate/config": "~4.2",
         "illuminate/container": "*",
+        "illuminate/filesystem": "*",
         "doctrine/inflector": "*",
         "patchwork/utf8": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.*",
         "mockery/mockery": "0.9.*",
-        "satooshi/php-coveralls": "dev-master",
         "hot/phpunit-runner": "dev-master"
     },
     "autoload": {

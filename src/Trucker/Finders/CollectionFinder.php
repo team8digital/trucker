@@ -77,6 +77,11 @@ class CollectionFinder
             $request->authenticate($auth);
         }
 
+        //add language if it is needed
+        if ($language = LanguageFactory::build()) {
+            $request->setLanguage($language);
+        }
+
         //add query conditions if needed
         if ($condition) {
             $request->addQueryCondition($condition);

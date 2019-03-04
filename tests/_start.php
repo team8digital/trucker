@@ -5,7 +5,7 @@ require_once __DIR__.'/stubs/User.php';
 require_once __DIR__.'/stubs/UserPreferenceSetting.php';
 require_once __DIR__.'/test_helpers/GuzzleTestingTrait.php';
 
-use Illuminate\Container\Container;
+use Illuminate\Container\Container;  
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
 use Trucker\TruckerServiceProvider;

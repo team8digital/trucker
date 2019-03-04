@@ -1,6 +1,6 @@
 <?php
 
-use Guzzle\Http\EntityBody;
+use GuzzleHttp\EntityBody;
 use Mockery as m;
 use Trucker\Facades\Config;
 use Trucker\Facades\Request;
@@ -52,7 +52,7 @@ class RestRequestTest extends TruckerTests
             ],
         ]);
         $result = $request->createRequest('http://example.com', '/users', 'GET');
-        $this->assertTrue($result instanceof \Guzzle\Http\Message\Request);
+        $this->assertTrue($result instanceof \GuzzleHttp\Message\Request);
     }
 
     public function testSetPostParameters()
@@ -74,7 +74,7 @@ class RestRequestTest extends TruckerTests
 
     public function testSetGetParameters()
     {
-        $mQuery = m::mock('Guzzle\Http\QueryString');
+        $mQuery = m::mock('GuzzleHttp\QueryString');
         $mQuery->shouldReceive('add')->with('foo', 'bar');
 
         $request = $this->simpleMockRequest([
@@ -162,7 +162,7 @@ class RestRequestTest extends TruckerTests
 
     public function testSettingBody()
     {
-        $request = \Guzzle\Http\Message\RequestFactory::getInstance()->create('PUT', 'http://www.test.com/');
+        $request = \GuzzleHttp\Message\RequestFactory::getInstance()->create('PUT', 'http://www.test.com/');
         $request->setBody(EntityBody::factory('test'));
         $this->assertEquals(4, (string) $request->getHeader('Content-Length'));
         $this->assertFalse($request->hasHeader('Transfer-Encoding'));
@@ -259,7 +259,7 @@ class RestRequestTest extends TruckerTests
                     'Content-Type' => 'application/json',
                 ]],
             ],
-            ['method' => 'send', 'return' => m::mock('Guzzle\Http\Message\Response')],
+            ['method' => 'send', 'return' => m::mock('GuzzleHttp\Message\Response')],
         ]);
 
         $request->createRequest('http://example.com', '/users', 'GET');
@@ -304,7 +304,7 @@ class RestRequestTest extends TruckerTests
         $method = 'get'
     ) {
 
-        $mockRequest = m::mock('Guzzle\Http\Message\Request');
+        $mockRequest = m::mock('GuzzleHttp\Message\Request');
 
         foreach ($shouldReceive as $sr) {
 
@@ -321,7 +321,7 @@ class RestRequestTest extends TruckerTests
             $mr->times(array_key_exists('times', $sr) ? $sr['times'] : 1);
         }
 
-        $client = m::mock('Guzzle\Http\Client');
+        $client = m::mock('GuzzleHttp\Client');
         $client->shouldReceive('setBaseUrl')->with($baseUrl);
         $client->shouldReceive($method)->with($uri)->andReturn($mockRequest);
 

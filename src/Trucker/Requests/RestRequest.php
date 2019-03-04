@@ -10,7 +10,7 @@
  */
 namespace Trucker\Requests;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 use Illuminate\Container\Container;
 use Trucker\Facades\Config;
 use Trucker\Facades\ErrorHandlerFactory;
@@ -35,7 +35,7 @@ class RestRequest implements RequestableInterface
     /**
      * Request client
      *
-     * @var \Guzzle\Http\Client
+     * @var \GuzzleHttp\Client
      */
     protected $client;
 
@@ -43,7 +43,7 @@ class RestRequest implements RequestableInterface
      * Request object managed by this
      * class
      *
-     * @var \Guzzle\Http\Message\Request
+     * @var \GuzzleHttp\Message\Request
      */
     protected $request;
 
@@ -62,7 +62,7 @@ class RestRequest implements RequestableInterface
     /**
      * Getter function to access the HTTP Client
      *
-     * @return \Guzzle\Http\Client
+     * @return \GuzzleHttp\Client
      */
     public function &getClient()
     {
@@ -220,7 +220,7 @@ class RestRequest implements RequestableInterface
         $request = $this->request;
         $this->request->getEventDispatcher()->addListener(
             'request.error',
-            function (\Guzzle\Common\Event $event) use ($httpStatus, $stopPropagation, $func, $request) {
+            function (\GuzzleHttp\Common\Event $event) use ($httpStatus, $stopPropagation, $func, $request) {
                 if ($httpStatus == -1 || $event['response']->getStatusCode() == $httpStatus) {
 
                     // Stop other events from firing if needed
@@ -269,6 +269,17 @@ class RestRequest implements RequestableInterface
     }
 
     /**
+     * Function to add language to the request
+     *
+     * @param  LanguageInterface $auth
+     * @return void
+     */
+    public function setLanguage(LanguageInterface $language)
+    {
+        $language->setLanguageRequest($this->request);
+    }
+
+    /**
      * Function to send the request to the remote API
      *
      * @return  \Trucker\Responses\Response
@@ -277,7 +288,7 @@ class RestRequest implements RequestableInterface
     {
         try {
             $response = $this->request->send();
-        } catch (\Guzzle\Http\Exception\BadResponseException $e) {
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             $response = $e->getResponse();
         }
 
