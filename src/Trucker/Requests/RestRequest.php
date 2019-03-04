@@ -56,7 +56,7 @@ class RestRequest implements RequestableInterface
     public function __construct(Container $app, $client = null)
     {
         $this->app = $app;
-        $this->client = $client == null ? new Client : $client;
+        $this->client = $client == null ? new Client(['base_uri' => Config::get('request.base_uri')]) : $client;
     }
 
     /**
@@ -80,10 +80,8 @@ class RestRequest implements RequestableInterface
      *                                 contains the HTTP method type sent with a POST
      * @return RequestManager
      */
-    public function createRequest($baseUri, $path, $httpMethod = 'GET', $requestHeaders = array(), $httpMethodParam = null)
+    public function createRequest($path, $httpMethod = 'GET', $requestHeaders = array(), $httpMethodParam = null)
     {
-        $this->client->setBaseUrl($baseUri);
-
         if (!in_array(strtolower($httpMethod), array('get', 'put', 'post', 'patch', 'delete', 'head'))) {
             throw new Exception("Invalid HTTP method");
         }
@@ -381,7 +379,6 @@ class RestRequest implements RequestableInterface
     public function rawRequest($uri, $method, $params = array(), $getParams = array(), $files = array(), $headers = array())
     {
         $this->request = self::createRequest(
-            Config::get('request.base_uri'),
             $uri,
             $method
         );

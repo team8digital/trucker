@@ -67,7 +67,6 @@ class CollectionFinder
 
         //init the request
         $request->createRequest(
-            Config::get('request.base_uri'),
             UrlGenerator::getCollectionUri($model),
             'GET'
         );

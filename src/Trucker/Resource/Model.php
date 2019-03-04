@@ -516,7 +516,6 @@ class Model
 
             //make a CREATE request
             $request->createRequest(
-                Config::get('request.base_uri'),
                 UrlGenerator::getCreateUri($this),
                 'POST',
                 [], //no extra headers
@@ -527,7 +526,6 @@ class Model
 
             //make an UPDATE request
             $request->createRequest(
-                Config::get('request.base_uri'),
                 UrlGenerator::getDeleteUri(
                     $this,
                     [':' . $this->getIdentityProperty() => $this->getId()]
@@ -593,7 +591,6 @@ class Model
 
         //init the request
         $request->createRequest(
-            Config::get('request.base_uri'),
             UrlGenerator::getDeleteUri(
                 $this,
                 [':' . $this->getIdentityProperty() => $this->getId()]

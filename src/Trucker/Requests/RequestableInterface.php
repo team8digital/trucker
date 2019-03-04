@@ -26,7 +26,7 @@ interface RequestableInterface
 
     public function &getClient();
 
-    public function createRequest($baseUri, $path, $httpMethod = 'GET', $requestHeaders = array(), $httpMethodParam = null);
+    public function createRequest($path, $httpMethod = 'GET', $requestHeaders = array(), $httpMethodParam = null);
 
     public function setHeaders($requestHeaders = array());
 
