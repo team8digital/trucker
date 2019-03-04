@@ -1,15 +1,15 @@
 {
-    "name": "alexmanno/trucker",
+    "name": "team8digital/trucker",
     "description": "A simple active resource implementation written in PHP to consume any REST API",
     "keywords":["trucker", "activeresource", "active resource"],
     "type": "library",
-    "homepage": "http://alessandromanno.com/",
+    "homepage": "https://team8digital.uk/",
     "license": "MIT",
     "authors": [
         {
-            "name": "Alessandro Manno",
-            "homepage": "http://alessandromanno.com/",
-            "email": "alessandromanno96@gmail.com",
+            "name": "Team8Digital",
+            "homepage": "https://team8digital.uk/",
+            "email": "contact@team8digital.uk",
             "role": "Developer"
         }
     ],
