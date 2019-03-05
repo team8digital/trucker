@@ -11,6 +11,7 @@
 namespace Trucker\Resource;
 
 use Trucker\Facades\AuthFactory;
+use Trucker\Facades\LanguageFactory;
 use Trucker\Facades\Collection;
 use Trucker\Facades\Config;
 use Trucker\Facades\ErrorHandlerFactory;

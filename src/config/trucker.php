@@ -11,12 +11,15 @@ return [
         | This parameter specifies the driver to use for authenticating requests
         | with the remote API.
         |
-        | Supported Options: basic
+        | Supported Options: basic, jwt
         |
         | basic - This driver will use HTTP Basic Authentication, and set the
         |         `auth.basic.username` and `auth.basic.password` config values
         |         on the request.
-        |
+        | jwt - This driver will use HTTP Basic Authentication, and set the
+        |         `auth.basic.username` and `auth.basic.password` config values
+        |         on the request. It will then use the /auth path to get the token
+        |         which will be saved and used as header 'Authorization: Bearer {token}'
         |
          */
 
@@ -28,6 +31,7 @@ return [
             'password' => '{basic_password}',
         ],
 
+        'jwt' => null,
     ),
 
     'error_handler' => array(

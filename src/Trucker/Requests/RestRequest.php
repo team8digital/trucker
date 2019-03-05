@@ -151,7 +151,7 @@ class RestRequest implements RequestableInterface
      */
     public function setGetParameters($params = array())
     {
-        $query = $this->request->getQuery();
+        $query = $this->request->getUri()->getQuery();
         foreach ($params as $key => $val) {
             $query->add($key, $val);
         }
@@ -304,6 +304,19 @@ class RestRequest implements RequestableInterface
     public function rawGet($uri, $params = array(), $headers = array())
     {
         return $this->rawRequest($uri, 'GET', array(), $params, array(), $headers);
+    }
+
+    /**
+     * Function to execute a raw GET request
+     *
+     * @param  string $uri       uri to hit (i.e. /users)
+     * @param  array  $params    Querystring parameters to send
+     * @param  array  $headers   Optional headers to use
+     * @return \Trucker\Responses\RawResponse
+     */
+    public function rawOptions($uri, $params = array(), $headers = array())
+    {
+        return $this->rawRequest($uri, 'OPTIONS', array(), $params, array(), $headers);
     }
 
     /**

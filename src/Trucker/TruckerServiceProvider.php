@@ -183,6 +183,10 @@ class TruckerServiceProvider extends ServiceProvider
             return new Factories\AuthFactory($app);
         });
 
+        $app->bind('trucker.language', function ($app) {
+            return new Factories\LanguageFactory($app);
+        });
+
         return $app;
     }
 

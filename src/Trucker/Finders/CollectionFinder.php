@@ -12,6 +12,7 @@ namespace Trucker\Finders;
 
 use Illuminate\Container\Container;
 use Trucker\Facades\AuthFactory;
+use Trucker\Facades\LanguageFactory;
 use Trucker\Facades\Config;
 use Trucker\Facades\RequestFactory;
 use Trucker\Facades\UrlGenerator;
