@@ -48,6 +48,14 @@ class RestRequest implements RequestableInterface
     protected $request;
 
     /**
+     * Array of headers to include in the request.
+     * Needs to be setup prior to request call
+     *
+     * @var Array
+     */
+    protected $headers;
+
+    /**
      * Build a new RestRequest
      *
      * @param Container $app
@@ -89,15 +97,17 @@ class RestRequest implements RequestableInterface
         $method = strtolower($httpMethod);
         $method = $method == 'patch' ? 'put' : $method; //override patch calls with put
 
+        //set any additional headers on the request
+        $this->setHeaders($requestHeaders);
+        // get FULL set of headers
+        $headers = $this->getHeaders();
+
         if ($httpMethodParam != null && in_array($method, array('put', 'post', 'patch', 'delete'))) {
             $this->request = $this->client->post($path);
             $this->request->setPostField($httpMethodParam, strtoupper($method));
         } else {
             $this->request = $this->client->{$method}($path);
         }
-
-        //set any additional headers on the request
-        $this->setHeaders($requestHeaders);
 
         //setup how we get data back (xml, json etc)
         $this->setTransportLanguage();
@@ -114,8 +124,42 @@ class RestRequest implements RequestableInterface
     public function setHeaders($requestHeaders = array())
     {
         foreach ($requestHeaders as $header => $value) {
-            $this->request->setHeader($header, $value);
+            $this->headers[$header] => $value;
+            //$this->request->setHeader($header, $value);
         }
+    }
+    /**
+     * Function to get headers for the request
+     *
+     * @return  Array of header data
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Function to get headers for the request
+     *
+     * @return  Array of header data
+     */
+    public function getHeader($index)
+    {
+        return $this->headers[$index] ?? null;
+    }
+
+    /**
+     * Function to get headers for the request
+     *
+     * @return  Array of header data
+     */
+    public function resetHeaders()
+    {
+        $token = $this->getHeader('');
+
+        $this->headers = [];
+        $this->setHeaders($token);
+
     }
 
     /**
@@ -263,7 +307,7 @@ class RestRequest implements RequestableInterface
      */
     public function authenticate(AuthenticationInterface $auth)
     {
-        $auth->authenticateRequest($this->request);
+        return $auth->authenticateRequest($this->request);
     }
 
     /**

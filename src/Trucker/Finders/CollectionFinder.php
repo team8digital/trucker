@@ -66,21 +66,24 @@ class CollectionFinder
         //get a request object
         $request = RequestFactory::build();
 
-        //init the request
-        $request->createRequest(
-            UrlGenerator::getCollectionUri($model),
-            'GET'
-        );
-
         //add auth if it is needed
         if ($auth = AuthFactory::build()) {
-            $request->authenticate($auth);
+            $new_headers = $request->authenticate($auth);
+            $request->addHeaders($new_headers);
         }
 
         //add language if it is needed
         if ($language = LanguageFactory::build()) {
-            $request->setLanguage($language);
+            $new_headers = $request->setLanguage($language);
+            $request->addHeaders($new_headers);
         }
+        
+        //init the request
+        $request->createRequest(
+            UrlGenerator::getCollectionUri($model),
+            'GET',
+            $request->getHeaders()
+        );
 
         //add query conditions if needed
         if ($condition) {

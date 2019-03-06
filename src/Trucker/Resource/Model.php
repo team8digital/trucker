@@ -513,13 +513,25 @@ class Model
         //get a request object
         $request = RequestFactory::build();
 
+        //add auth if it is needed
+        if ($auth = AuthFactory::build()) {
+            $new_headers = $request->authenticate($auth);
+            $request->addHeaders($new_headers);
+        }
+
+        //add language if it is needed
+        if ($language = LanguageFactory::build()) {
+            $new_headers = $request->setLanguage($language);
+            $request->addHeaders($new_headers);
+        }
+
         if ($this->getId() === false) {
 
             //make a CREATE request
             $request->createRequest(
                 UrlGenerator::getCreateUri($this),
                 'POST',
-                [], //no extra headers
+                $request->getHeaders(), //no extra headers
                 Config::get('request.http_method_param')
             );
 
@@ -532,20 +544,11 @@ class Model
                     [':' . $this->getIdentityProperty() => $this->getId()]
                 ),
                 'PUT',
-                [], //no extra headers
+                $request->getHeaders(), //no extra headers
                 Config::get('request.http_method_param')
             );
         }
 
-        //add auth if it is needed
-        if ($auth = AuthFactory::build()) {
-            $request->authenticate($auth);
-        }
-
-        //add language if it is needed
-        if ($language = LanguageFactory::build()) {
-            $request->setLanguage($language);
-        }
 
         //set the property attributes on the request
         $request->setModelProperties($this);
@@ -590,6 +593,18 @@ class Model
         //get a request object
         $request = RequestFactory::build();
 
+        //add auth if it is needed
+        if ($auth = AuthFactory::build()) {
+            $new_headers = $request->authenticate($auth);
+            $request->addHeaders($new_headers);
+        }
+
+        //add language if it is needed
+        if ($language = LanguageFactory::build()) {
+            $new_headers = $request->setLanguage($language);
+            $request->addHeaders($new_headers);
+        }
+
         //init the request
         $request->createRequest(
             UrlGenerator::getDeleteUri(
@@ -597,19 +612,9 @@ class Model
                 [':' . $this->getIdentityProperty() => $this->getId()]
             ),
             'DELETE',
-            [], //no extra headers
+            $request->getHeaders(), //no extra headers
             Config::get('request.http_method_param')
         );
-
-        //add auth if it is needed
-        if ($auth = AuthFactory::build()) {
-            $request->authenticate($auth);
-        }
-
-        //add language if it is needed
-        if ($language = LanguageFactory::build()) {
-            $request->setLanguage($language);
-        }
 
         //actually send the request
         $response = $request->sendRequest();

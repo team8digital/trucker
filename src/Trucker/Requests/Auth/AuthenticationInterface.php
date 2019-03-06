@@ -27,7 +27,7 @@ interface AuthenticationInterface
      * to the request
      * 
      * @param GuzzleHttp\Message\Request $request Request passed by reference
-     * @return  void
+     * @return  Array new headers to add to request
      */
     public function authenticateRequest(&$request);
 }
