@@ -124,7 +124,7 @@ class RestRequest implements RequestableInterface
     public function setHeaders($requestHeaders = array())
     {
         foreach ($requestHeaders as $header => $value) {
-            $this->headers[$header] => $value;
+            $this->headers[$header] = $value;
             //$this->request->setHeader($header, $value);
         }
     }
