@@ -25,7 +25,7 @@
     ],
     "require": {
         "php": ">=7.0",
-        "guzzle/guzzle": "~3.9",
+        "guzzle/guzzle": "~3.8",
         "illuminate/support": "*",
         "illuminate/config": "*",
         "illuminate/container": "*",
