@@ -128,7 +128,7 @@ class GetParamsResultOrder implements QueryResultOrderInterface
      * Function to add all the directives that have been
      * given to the class to a given request object
      *
-     * @param GuzzleHttp\Message\Request $request Request passed by reference
+     * @param Guzzle\Message\Request $request Request passed by reference
      * @return  void
      */
     public function addToRequest(&$request)

@@ -10,6 +10,7 @@
  */
 namespace Trucker\Requests\Auth;
 
+use Guzzle\Client;
 use Illuminate\Container\Container;
 use Trucker\Facades\Config;
 use Trucker\Requests\Auth\AuthenticationInterface;
@@ -38,7 +39,7 @@ class JwtAuthenticator implements AuthenticationInterface
      * Function to add the necessary authentication
      * to the request
      *
-     * @param GuzzleHttp\Message\Request $request Request passed by reference
+     * @param Guzzle\Message\Request $request Request passed by reference
      * @return  void
      */
     public function authenticateRequest(&$request)
@@ -65,14 +66,12 @@ class JwtAuthenticator implements AuthenticationInterface
                 $body = (string) $response->getBody();
                 $body = json_decode($body);
                 Config::set('auth.jwt', $body->token);
-            } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            } catch (\Guzzle\Exception\BadResponseException $e) {
                 $response = $e->getResponse();
             }
         }
         if (Config::get('auth.jwt')) {
-            return ['Authorization' => 'Bearer '.Config::get('auth.jwt')];
+            $request->setHeaders(['Authorization' => 'Bearer '.Config::get('auth.jwt')]);
         }
-
-        return [];
     }
 }

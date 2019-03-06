@@ -26,7 +26,7 @@ interface LanguageInterface
      * Function to add the necessary language headers
      * to the request
      * 
-     * @param GuzzleHttp\Message\Request $request Request passed by reference
+     * @param Guzzle\Message\Request $request Request passed by reference
      * @return  void
      */
     public function setLanguageRequest(&$request);

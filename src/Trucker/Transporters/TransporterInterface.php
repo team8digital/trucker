@@ -17,29 +17,29 @@ interface TransporterInterface
 
     /**
      * Function to set the appropriate headers on a request object
-     * to facilitate a particular transport language
+     * to facilitate a particular transport format
      * 
-     * @param GuzzleHttpMessageRequest $request
+     * @param GuzzleMessageRequest $request
      */
-    public function setHeaderOnRequest(\GuzzleHttp\Message\Request &$request);
+    public function setHeaderOnRequest(\Guzzle\Message\Request &$request);
 
     /**
      * Function to convert a response object into an associative
      * array of data
      * 
-     * @param  GuzzleHttpMessageResponse $response
+     * @param  GuzzleMessageResponse $response
      * @return array
      */
-    public function parseResponseToData(\GuzzleHttp\Message\Response $response);
+    public function parseResponseToData(\Guzzle\Message\Response $response);
 
     /**
      * Function to parse the response string into an object
-     * specific to the type of transport mechanism used i.e. json, xml etc
+     * specific to the type of transport format used i.e. json, xml etc
      * 
-     * @param  GuzzleHttpMessageResponse $response
+     * @param  GuzzleMessageResponse $response
      * @return stdClass
      */
-    public function parseResponseStringToObject(\GuzzleHttp\Message\Response $response);
+    public function parseResponseStringToObject(\Guzzle\Message\Response $response);
 
     /**
      * Set the request body for the given request.

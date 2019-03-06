@@ -10,7 +10,7 @@
  */
 namespace Trucker\Requests;
 
-use GuzzleHttp\Client;
+use Guzzle\Client;
 use Illuminate\Container\Container;
 use Trucker\Facades\Config;
 use Trucker\Facades\ErrorHandlerFactory;
@@ -35,7 +35,7 @@ class RestRequest implements RequestableInterface
     /**
      * Request client
      *
-     * @var \GuzzleHttp\Client
+     * @var \Guzzle\Client
      */
     protected $client;
 
@@ -43,17 +43,9 @@ class RestRequest implements RequestableInterface
      * Request object managed by this
      * class
      *
-     * @var \GuzzleHttp\Message\Request
+     * @var \Guzzle\Message\Request
      */
     protected $request;
-
-    /**
-     * Array of headers to include in the request.
-     * Needs to be setup prior to request call
-     *
-     * @var Array
-     */
-    protected $headers;
 
     /**
      * Build a new RestRequest
@@ -70,7 +62,7 @@ class RestRequest implements RequestableInterface
     /**
      * Getter function to access the HTTP Client
      *
-     * @return \GuzzleHttp\Client
+     * @return \Guzzle\Client
      */
     public function &getClient()
     {
@@ -97,17 +89,15 @@ class RestRequest implements RequestableInterface
         $method = strtolower($httpMethod);
         $method = $method == 'patch' ? 'put' : $method; //override patch calls with put
 
-        //set any additional headers on the request
-        $this->setHeaders($requestHeaders);
-        // get FULL set of headers
-        $headers = $this->getHeaders();
-
         if ($httpMethodParam != null && in_array($method, array('put', 'post', 'patch', 'delete'))) {
             $this->request = $this->client->post($path);
             $this->request->setPostField($httpMethodParam, strtoupper($method));
         } else {
             $this->request = $this->client->{$method}($path);
         }
+
+        //set any additional headers on the request
+        $this->setHeaders($requestHeaders);
 
         //setup how we get data back (xml, json etc)
         $this->setTransportLanguage();
@@ -124,42 +114,8 @@ class RestRequest implements RequestableInterface
     public function setHeaders($requestHeaders = array())
     {
         foreach ($requestHeaders as $header => $value) {
-            $this->headers[$header] = $value;
-            //$this->request->setHeader($header, $value);
+            $this->request->setHeader($header, $value);
         }
-    }
-    /**
-     * Function to get headers for the request
-     *
-     * @return  Array of header data
-     */
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-
-    /**
-     * Function to get headers for the request
-     *
-     * @return  Array of header data
-     */
-    public function getHeader($index)
-    {
-        return $this->headers[$index] ?? null;
-    }
-
-    /**
-     * Function to get headers for the request
-     *
-     * @return  Array of header data
-     */
-    public function resetHeaders()
-    {
-        $token = $this->getHeader('');
-
-        $this->headers = [];
-        $this->setHeaders($token);
-
     }
 
     /**
@@ -262,7 +218,7 @@ class RestRequest implements RequestableInterface
         $request = $this->request;
         $this->request->getEventDispatcher()->addListener(
             'request.error',
-            function (\GuzzleHttp\Common\Event $event) use ($httpStatus, $stopPropagation, $func, $request) {
+            function (\Guzzle\Common\Event $event) use ($httpStatus, $stopPropagation, $func, $request) {
                 if ($httpStatus == -1 || $event['response']->getStatusCode() == $httpStatus) {
 
                     // Stop other events from firing if needed
@@ -330,7 +286,7 @@ class RestRequest implements RequestableInterface
     {
         try {
             $response = $this->request->send();
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (\Guzzle\Exception\BadResponseException $e) {
             $response = $e->getResponse();
         }
 
