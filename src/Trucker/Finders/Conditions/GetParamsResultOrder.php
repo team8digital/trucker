@@ -133,7 +133,7 @@ class GetParamsResultOrder implements QueryResultOrderInterface
      */
     public function addToRequest(&$request)
     {
-        $query = $request->getUri()->getQuery();
+        $query = $request->getQuery();
 
         if (isset($this->orderByField)) {
             $query->add(

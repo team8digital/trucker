@@ -153,7 +153,9 @@ class RestRequest implements RequestableInterface
      */
     public function setGetParameters($params = array())
     {
-        $query = $this->request->getUri()->getQuery();
+        if (empty($params)) return;
+        
+        $query = $this->request->getQuery();
         foreach ($params as $key => $val) {
             $query->add($key, $val);
         }

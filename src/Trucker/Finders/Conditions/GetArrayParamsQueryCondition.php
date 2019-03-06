@@ -169,7 +169,7 @@ class GetArrayParamsQueryCondition implements QueryConditionInterface
      */
     public function addToRequest(&$request)
     {
-        $query = $request->getUri()->getQuery();
+        $query = $request->getQuery();
 
         $conatiner = Config::get('query_condition.get_array_params.container_parameter');
         $property = Config::get('query_condition.get_array_params.property');

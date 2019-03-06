@@ -189,4 +189,14 @@ class Collection implements \Iterator
     {
         return json_encode($this->toArray($collectionKey, $metaKey));
     }
+
+    /**
+     * Function to convert the collection to json string for data dump
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return json_encode($this->toArray());
+    }
 }//end class

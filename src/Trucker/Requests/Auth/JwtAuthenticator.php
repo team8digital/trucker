@@ -10,7 +10,7 @@
  */
 namespace Trucker\Requests\Auth;
 
-use Guzzle\Http\Client;
+use Trucker\Facades\RequestFactory;
 use Illuminate\Container\Container;
 use Trucker\Facades\Config;
 use Trucker\Requests\Auth\AuthenticationInterface;
@@ -71,7 +71,7 @@ class JwtAuthenticator implements AuthenticationInterface
 
         //get api response
         $data = $response->parseResponseToData();
-        Config::set('auth.jwt', $data->token);
+        Config::set('auth.jwt', $data['token']);
 
         }
         if (Config::get('auth.jwt')) {
