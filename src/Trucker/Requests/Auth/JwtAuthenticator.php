@@ -10,7 +10,7 @@
  */
 namespace Trucker\Requests\Auth;
 
-use Guzzle\Client;
+use Guzzle\Http\Client;
 use Illuminate\Container\Container;
 use Trucker\Facades\Config;
 use Trucker\Requests\Auth\AuthenticationInterface;

@@ -16,7 +16,7 @@ trait GuzzleTestingTrait
      * Function to track history for unit testing on a
      * guzzle client
      *
-     * @param  Guzzle\Client    $client       Guzzle client
+     * @param  Guzzle\Http\Client    $client       Guzzle client
      * @param  integer          $historyLimit number of requests to keep
      * @return void
      */
@@ -31,7 +31,7 @@ trait GuzzleTestingTrait
     /**
      * Function to mock an HTTP response to a Guzzle Request
      *
-     * @param  Guzzle\Client    $client      Guzzle Client to mock response for
+     * @param  Guzzle\Http\Client    $client      Guzzle Client to mock response for
      * @param  integer          $http_status HTTP status to return
      * @param  array            $headers     HTTP Headers for the response
      * @param  string           $body        HTTP response body

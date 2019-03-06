@@ -10,7 +10,7 @@
  */
 namespace Trucker\Factories;
 
-use Guzzle\Client;
+use Guzzle\Http\Client;
 use Illuminate\Container\Container;
 use Trucker\Facades\Config;
 use Trucker\Framework\FactoryDriver;
@@ -21,7 +21,7 @@ class RequestFactory extends FactoryDriver
      * Guzzle Client attached to request
      * returned by build()
      *
-     * @var Guzzle\Client
+     * @var Guzzle\Http\Client
      */
     protected $client;
 
@@ -33,13 +33,13 @@ class RequestFactory extends FactoryDriver
     public function __construct(Container $app)
     {
         $this->app = $app;
-        $this->client = new \Guzzle\Client(['base_uri' => Config::get('request.base_uri')]);
+        $this->client = new \Guzzle\Http\Client(['base_uri' => Config::get('request.base_uri')]);
     }
 
     /**
      * Getter function to access the HTTP Client
      *
-     * @return Guzzle\Client
+     * @return Guzzle\Http\Client
      */
     public function &getClient()
     {

@@ -10,7 +10,7 @@
  */
 namespace Trucker\Requests;
 
-use Guzzle\Client;
+use Guzzle\Http\Client;
 use Illuminate\Container\Container;
 use Trucker\Facades\Config;
 use Trucker\Facades\ErrorHandlerFactory;
@@ -35,7 +35,7 @@ class RestRequest implements RequestableInterface
     /**
      * Request client
      *
-     * @var \Guzzle\Client
+     * @var \Guzzle\Http\Client
      */
     protected $client;
 
@@ -62,7 +62,7 @@ class RestRequest implements RequestableInterface
     /**
      * Getter function to access the HTTP Client
      *
-     * @return \Guzzle\Client
+     * @return \Guzzle\Http\Client
      */
     public function &getClient()
     {

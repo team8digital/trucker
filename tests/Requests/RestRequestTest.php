@@ -321,7 +321,7 @@ class RestRequestTest extends TruckerTests
             $mr->times(array_key_exists('times', $sr) ? $sr['times'] : 1);
         }
 
-        $client = m::mock('Guzzle\Client');
+        $client = m::mock('Guzzle\Http\Client');
         $client->shouldReceive('setBaseUrl')->with($baseUrl);
         $client->shouldReceive($method)->with($uri)->andReturn($mockRequest);
 
