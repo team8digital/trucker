@@ -48,27 +48,31 @@ class JwtAuthenticator implements AuthenticationInterface
             $username = Config::get('auth.basic.username');
             $password = Config::get('auth.basic.password');
             $language = Config::get('request.language') ?? 'en';
+            
+        //get a request object
+        $request = RequestFactory::build();
 
-            $client = new Client([
-                'base_uri' => Config::get('request.base_uri'),
-                'X-localization' => $language
-            ]);
-            try {
-                $response = $client->post('/auth', [
-                    'form_params' => [
-                        'api_username'=>$username,
-                        'api_password'=>$password,
-                        'username'=>'lincoln.watsica',
-                        'password'=>'1234',
+        //init the request
+        $request->createRequest(
+            Config::get('request.base_uri'),
+            '/auth',
+            'POST'
+        );
 
-                    ]
-                ]);
-                $body = (string) $response->getBody();
-                $body = json_decode($body);
-                Config::set('auth.jwt', $body->token);
-            } catch (\Guzzle\Exception\BadResponseException $e) {
-                $response = $e->getResponse();
-            }
+        $request->setPostParameters([
+            'api_username'=>$username,
+            'api_password'=>$password,
+            'username'=>'lincoln.watsica',
+            'password'=>'1234',
+        ]);
+
+        //actually send the request
+        $response = $request->sendRequest();
+
+        //get api response
+        $data = $response->parseResponseToData();
+        Config::set('auth.jwt', $data->token);
+
         }
         if (Config::get('auth.jwt')) {
             $request->setHeaders(['Authorization' => 'Bearer '.Config::get('auth.jwt')]);
