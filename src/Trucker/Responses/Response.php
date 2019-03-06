@@ -27,7 +27,7 @@ class Response extends BaseResponse
      * Response object managed by this
      * class
      * 
-     * @var \Guzzle\Message\Response
+     * @var \Guzzle\Http\Message\Response
      */
     protected $response;
 
@@ -37,7 +37,7 @@ class Response extends BaseResponse
      * @param Container $app
      * @param Client    $client
      */
-    public function __construct(Container $app, \Guzzle\Message\Response $response = null)
+    public function __construct(Container $app, \Guzzle\Http\Message\Response $response = null)
     {
         $this->app = $app;
 
@@ -82,10 +82,10 @@ class Response extends BaseResponse
      * Create a new instance of the given model.
      *
      * @param  Container $app
-     * @param  \Guzzle\Message\Response $response
+     * @param  \Guzzle\Http\Message\Response $response
      * @return \Trucker\Responses\Response
      */
-    public function newInstance(Container $app, \Guzzle\Message\Response $response)
+    public function newInstance(Container $app, \Guzzle\Http\Message\Response $response)
     {
     
         // This method just provides a convenient way for us to generate fresh model

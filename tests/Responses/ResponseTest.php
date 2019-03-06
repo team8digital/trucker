@@ -9,7 +9,7 @@ class ResponseTest extends TruckerTests
 
     public function testDynamicFunctionCallOnResponse()
     {
-        $gResponse = m::mock('Guzzle\Message\Response');
+        $gResponse = m::mock('Guzzle\Http\Message\Response');
         $gResponse->shouldReceive('getStatusCode')
                   ->once()
                   ->andReturn(200);
@@ -35,7 +35,7 @@ class ResponseTest extends TruckerTests
 
     public function testNewInstanceCreator()
     {
-        $gResponse = m::mock('Guzzle\Message\Response');
+        $gResponse = m::mock('Guzzle\Http\Message\Response');
         $gResponse->shouldReceive('getStatusCode')
                   ->times(2)
                   ->andReturn(200);
@@ -65,7 +65,7 @@ class ResponseTest extends TruckerTests
 
         $data = ['foo' => 'bar'];
 
-        $gResponse = m::mock('Guzzle\Message\Response');
+        $gResponse = m::mock('Guzzle\Http\Message\Response');
         $gResponse->shouldReceive('json')
                   ->once()
                   ->andReturn($data);
@@ -90,7 +90,7 @@ class ResponseTest extends TruckerTests
         $dataJson = json_encode($data);
         $decodedJson = json_decode($dataJson);
 
-        $gResponse = m::mock('Guzzle\Message\Response');
+        $gResponse = m::mock('Guzzle\Http\Message\Response');
         $gResponse->shouldReceive('getBody')
                   ->with(true)
                   ->once()

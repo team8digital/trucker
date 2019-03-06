@@ -43,7 +43,7 @@ class RestRequest implements RequestableInterface
      * Request object managed by this
      * class
      *
-     * @var \Guzzle\Message\Request
+     * @var \Guzzle\Http\Message\Request
      */
     protected $request;
 

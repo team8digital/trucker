@@ -52,7 +52,7 @@ class RestRequestTest extends TruckerTests
             ],
         ]);
         $result = $request->createRequest('http://example.com/users', 'GET');
-        $this->assertTrue($result instanceof \Guzzle\Message\Request);
+        $this->assertTrue($result instanceof \Guzzle\Http\Message\Request);
     }
 
     public function testSetPostParameters()
@@ -162,7 +162,7 @@ class RestRequestTest extends TruckerTests
 
     public function testSettingBody()
     {
-        $request = \Guzzle\Message\RequestFactory::getInstance()->create('PUT', 'http://www.test.com/');
+        $request = \Guzzle\Http\Message\RequestFactory::getInstance()->create('PUT', 'http://www.test.com/');
         $request->setBody(EntityBody::factory('test'));
         $this->assertEquals(4, (string) $request->getHeader('Content-Length'));
         $this->assertFalse($request->hasHeader('Transfer-Encoding'));
@@ -259,7 +259,7 @@ class RestRequestTest extends TruckerTests
                     'Content-Type' => 'application/json',
                 ]],
             ],
-            ['method' => 'send', 'return' => m::mock('Guzzle\Message\Response')],
+            ['method' => 'send', 'return' => m::mock('Guzzle\Http\Message\Response')],
         ]);
 
         $request->createRequest('http://example.com/users', 'GET');
@@ -304,7 +304,7 @@ class RestRequestTest extends TruckerTests
         $method = 'get'
     ) {
 
-        $mockRequest = m::mock('Guzzle\Message\Request');
+        $mockRequest = m::mock('Guzzle\Http\Message\Request');
 
         foreach ($shouldReceive as $sr) {
 

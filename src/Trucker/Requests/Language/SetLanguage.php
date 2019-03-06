@@ -38,7 +38,7 @@ class SetLanguage implements LanguageInterface
      * Function to add the necessary authentication
      * to the request
      *
-     * @param Guzzle\Message\Request $request Request passed by reference
+     * @param Guzzle\Http\Message\Request $request Request passed by reference
      * @return  void
      */
     public function setLanguageRequest(&$request)

@@ -8,7 +8,7 @@ class JsonTransporterTest extends TruckerTests
 {
     public function testSetsHeaderOnRequest()
     {
-        $request = m::mock('Guzzle\Message\Request');
+        $request = m::mock('Guzzle\Http\Message\Request');
         $request->shouldReceive('setHeaders')
             ->with([
                 'Accept' => 'application/json',
@@ -23,7 +23,7 @@ class JsonTransporterTest extends TruckerTests
 
     public function testParsesResponseToData()
     {
-        $response = m::mock('Guzzle\Message\Response');
+        $response = m::mock('Guzzle\Http\Message\Response');
         $response->shouldReceive('json')
             ->once();
 
@@ -34,7 +34,7 @@ class JsonTransporterTest extends TruckerTests
 
     public function testParsesResponseStringToObject()
     {
-        $response = m::mock('Guzzle\Message\Response');
+        $response = m::mock('Guzzle\Http\Message\Response');
         $response->shouldReceive('getBody')
             ->with(true)
             ->once()
