@@ -1,6 +1,6 @@
 <?php
 
-use Guzzle\EntityBody;
+use Guzzle\Http\EntityBody;
 use Mockery as m;
 use Trucker\Facades\Config;
 use Trucker\Facades\Request;
@@ -74,7 +74,7 @@ class RestRequestTest extends TruckerTests
 
     public function testSetGetParameters()
     {
-        $mQuery = m::mock('Guzzle\QueryString');
+        $mQuery = m::mock('Guzzle\Http\QueryString');
         $mQuery->shouldReceive('add')->with('foo', 'bar');
 
         $request = $this->simpleMockRequest([

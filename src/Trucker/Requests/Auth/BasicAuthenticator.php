@@ -46,6 +46,6 @@ class BasicAuthenticator implements AuthenticationInterface
         $username = Config::get('auth.basic.username');
         $password = Config::get('auth.basic.password');
 
-        $request->setHeaders(['auth' => [$username, $password]]);
+        $request->setAuth($username, $password);
     }
 }
