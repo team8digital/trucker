@@ -33,7 +33,7 @@ class RequestFactory extends FactoryDriver
     public function __construct(Container $app)
     {
         $this->app = $app;
-        $this->client = new \Guzzle\Http\Client(['base_uri' => Config::get('request.base_uri')]);
+        $this->client = new \Guzzle\Http\Client();
     }
 
     /**

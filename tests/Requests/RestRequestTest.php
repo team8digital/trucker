@@ -37,7 +37,7 @@ class RestRequestTest extends TruckerTests
             ],
         ]);
 
-        $r = $request->createRequest('http://example.com/users', 'GET');
+        $r = $request->createRequest('http://example.com', '/users', 'GET');
     }
 
     public function testCreateNewRequest()
@@ -51,7 +51,7 @@ class RestRequestTest extends TruckerTests
                 ]],
             ],
         ]);
-        $result = $request->createRequest('http://example.com/users', 'GET');
+        $result = $request->createRequest('http://example.com', '/users', 'GET');
         $this->assertTrue($result instanceof \Guzzle\Http\Message\Request);
     }
 
@@ -68,7 +68,7 @@ class RestRequestTest extends TruckerTests
             ['method' => 'setPostField', 'args' => ['biz', 'banng']],
         ]);
 
-        $request->createRequest('http://example.com/users', 'GET');
+        $request->createRequest('http://example.com', '/users', 'GET');
         $request->setPostParameters(['biz' => 'banng']);
     }
 
@@ -88,7 +88,7 @@ class RestRequestTest extends TruckerTests
             ['method' => 'getQuery', 'return' => $mQuery],
         ]);
 
-        $request->createRequest('http://example.com/users', 'GET');
+        $request->createRequest('http://example.com', '/users', 'GET');
         $request->setGetParameters(['foo' => 'bar']);
     }
 
@@ -105,7 +105,7 @@ class RestRequestTest extends TruckerTests
             ['method' => 'addPostFile', 'args' => ['fileOne', '/path/to/fileOne']],
         ]);
 
-        $request->createRequest('http://example.com/users', 'GET');
+        $request->createRequest('http://example.com', '/users', 'GET');
         $request->setFileParameters(['fileOne' => '/path/to/fileOne']);
     }
 
@@ -139,7 +139,7 @@ class RestRequestTest extends TruckerTests
         $mUser->shouldReceive('attributes')->andReturn($attributes);
         $mUser->shouldReceive('getFileFields')->andReturn(['fOne', 'fTwo']);
 
-        $request->createRequest('http://example.com/users', 'GET');
+        $request->createRequest('http://example.com', '/users', 'GET');
         $request->setModelProperties($mUser);
     }
 
@@ -157,7 +157,7 @@ class RestRequestTest extends TruckerTests
         ]);
 
         $headers = ['Cache-Control' => 'no-cache, must-revalidate'];
-        $request->createRequest('http://example.com/users', 'GET', $headers);
+        $request->createRequest('http://example.com', '/users', 'GET', $headers);
     }
 
     public function testSettingBody()
@@ -188,7 +188,7 @@ class RestRequestTest extends TruckerTests
             return true;
         };
 
-        $r = $request->createRequest('http://example.com/users', 'GET');
+        $r = $request->createRequest('http://example.com', '/users', 'GET');
         $request->addErrorHandler(200, $func, true);
     }
 
@@ -203,7 +203,7 @@ class RestRequestTest extends TruckerTests
                 ]],
             ],
         ]);
-        $r = $request->createRequest('http://example.com/users', 'GET');
+        $r = $request->createRequest('http://example.com', '/users', 'GET');
 
         $c = m::mock('Trucker\Finders\Conditions\QueryConditionInterface');
         $c->shouldReceive('addToRequest')->with($r)->once();
@@ -222,7 +222,7 @@ class RestRequestTest extends TruckerTests
                 ]],
             ],
         ]);
-        $r = $request->createRequest('http://example.com/users', 'GET');
+        $r = $request->createRequest('http://example.com', '/users', 'GET');
 
         $o = m::mock('Trucker\Finders\Conditions\QueryResultOrderInterface');
         $o->shouldReceive('addToRequest')->with($r)->once();
@@ -241,7 +241,7 @@ class RestRequestTest extends TruckerTests
                 ]],
             ],
         ]);
-        $r = $request->createRequest('http://example.com/users', 'GET');
+        $r = $request->createRequest('http://example.com', '/users', 'GET');
 
         $auth = m::mock('Trucker\Requests\Auth\AuthenticationInterface');
         $auth->shouldReceive('authenticateRequest')->with($r)->once();
@@ -262,7 +262,7 @@ class RestRequestTest extends TruckerTests
             ['method' => 'send', 'return' => m::mock('Guzzle\Http\Message\Response')],
         ]);
 
-        $request->createRequest('http://example.com/users', 'GET');
+        $request->createRequest('http://example.com', '/users', 'GET');
         $request->sendRequest();
     }
 
