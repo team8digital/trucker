@@ -519,7 +519,7 @@ class Model
             $request->createRequest(
                 UrlGenerator::getCreateUri($this),
                 'POST',
-                $request->getHeaders(), //no extra headers
+                [], //no extra headers
                 Config::get('request.http_method_param')
             );
 
@@ -532,7 +532,7 @@ class Model
                     [':' . $this->getIdentityProperty() => $this->getId()]
                 ),
                 'PUT',
-                $request->getHeaders(), //no extra headers
+                [], //no extra headers
                 Config::get('request.http_method_param')
             );
         }
@@ -597,7 +597,7 @@ class Model
                 [':' . $this->getIdentityProperty() => $this->getId()]
             ),
             'DELETE',
-            $request->getHeaders(), //no extra headers
+            [], //no extra headers
             Config::get('request.http_method_param')
         );
 

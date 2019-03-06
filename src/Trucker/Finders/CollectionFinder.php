@@ -69,8 +69,7 @@ class CollectionFinder
         //init the request
         $request->createRequest(
             UrlGenerator::getCollectionUri($model),
-            'GET',
-            []
+            'GET'
         );
 
         //add auth if it is needed

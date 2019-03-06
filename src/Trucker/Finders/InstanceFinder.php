@@ -62,8 +62,7 @@ class InstanceFinder
         //init the request
         $request->createRequest(
             UrlGenerator::getInstanceUri($model, [':id' => $id]),
-            'GET',
-            $request->getHeaders()
+            'GET'
         );
 
         //add auth if it is needed
